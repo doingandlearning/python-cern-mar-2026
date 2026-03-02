@@ -171,6 +171,75 @@ print("=" * 50)
 
 ---
 
+## Extensions (if you finish early)
+
+Try one or both of these once the main game works.
+
+### Extension A: Use a `while` loop instead
+
+**Your task:**
+
+- Replace the `for attempt in range(attempts):` loop with a `while` loop
+- Use a variable (e.g. `attempt = 0`) and increment it each time (e.g. `attempt += 1`)
+- The loop should run while `attempt < attempts` (and optionally while the player hasn’t won yet)
+- Make sure you don’t create an infinite loop: the attempt counter must increase and the loop must end when attempts are used up or the player guesses correctly
+
+**Hints:**
+
+- Initialise `attempt = 0` before the loop
+- At the end of each iteration (after processing the guess), add `attempt += 1`
+- You can use `while attempt < attempts and not player_won:` or break out with `break` when they win
+
+<details>
+<summary>Possible approach for Extension A</summary>
+
+```python
+attempt = 0
+player_won = False
+
+while attempt < attempts:
+    print(f"Attempt {attempt + 1} of {attempts}")
+    guess = int(input("Enter your guess (1-50): "))
+    # ... same validation and comparison logic ...
+    attempt += 1  # only increment for a "real" attempt (see Extension B)
+```
+
+</details>
+
+---
+
+### Extension B: Add a cheat code
+
+**Your task:**
+
+- If the player enters a special value (e.g. `-1`) as their guess, reveal the secret value and **do not** count it as an attempt
+- Use `continue` to skip the rest of the loop so you don’t increment the attempt counter or check win/lose
+- Only increment the attempt counter (in a `while` version) or only “use up” an attempt (in a `for` version) when the guess is not the cheat code
+
+**Hints:**
+
+- Check for the cheat value (e.g. `if guess == -1:`) **before** you check if they won or increment attempts
+- Print something like "The secret value is 42" then `continue`
+- In a `for` loop, the cheat doesn’t increment the loop variable, so that attempt is effectively free
+
+<details>
+<summary>Possible approach for Extension B</summary>
+
+```python
+guess = int(input("Enter your guess (1-50): "))
+
+# Cheat code: -1 reveals the answer and doesn't count as an attempt
+if guess == -1:
+    print(f"(Cheat) The secret value is {secret_value}")
+    continue
+
+# Rest of your logic: range check, then correct / too low / too high
+```
+
+</details>
+
+---
+
 ## Example Interaction
 
 ```

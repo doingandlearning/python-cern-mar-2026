@@ -1,4 +1,5 @@
-# STEP 5A: Discount codes (SAVE10 = 10% off, FIVER = £5 off, never below £0)
+# Lab 9: Fault-Tolerant Checkout - Complete Solution
+# Handles invalid input with try/except, validates ranges, produces a receipt.
 
 items = [
     {"id": 1, "name": "Coffee",   "price": 3.50},
@@ -19,18 +20,18 @@ while True:
     for item in items:
         print(f"  {item['id']}. {item['name']} (£{item['price']:.2f})")
 
-    choice = input("\nChoose a product number (1-5) or type 'done': ").strip().lower()
+    choice = input("\nChoose an item number (1-5) or type 'done': ").strip().lower()
     if choice == "done":
         break
 
     try:
         choice_num = int(choice)
     except ValueError:
-        print("You need to use valid numbers here (1-5). Try again.\n")
+        print("Please enter a number 1-5 or 'done'. Try again.\n")
         continue
 
     if choice_num < 1 or choice_num > 5:
-        print("We don't have that product. Please choose 1-5 from the menu.\n")
+        print("Please choose 1-5 from the menu.\n")
         continue
 
     chosen_item = None
@@ -39,17 +40,16 @@ while True:
             chosen_item = item
             break
 
-      
     if chosen_item is None:
-        print("We don't have that product. Please choose 1-5 from the menu.\n")
+        print("Please choose 1-5 from the menu.\n")
         continue
 
-    qty_text = input(f"How many {chosen_item['name']} would you like? ").strip()
+    qty_text = input(f"How many {chosen_item['name']}? ").strip()
 
     try:
         quantity = int(qty_text)
     except ValueError:
-        print("Quantity must be a whole number (for example 1, 2, or 3). Try again.\n")
+        print("Quantity must be a whole number. Try again.\n")
         continue
 
     if quantity < 1:
@@ -57,7 +57,7 @@ while True:
         continue
 
     if quantity > 20:
-        print("That's too many for one order (max 20). Try again.\n")
+        print("Maximum quantity is 20. Try again.\n")
         continue
 
     line_total = chosen_item["price"] * quantity
@@ -70,35 +70,12 @@ while True:
         "line_total": line_total,
     })
 
-    print(f"Added to basket: {chosen_item['name']} x{quantity} = £{line_total:.2f}")
+    print(f"Added: {chosen_item['name']} x{quantity} = £{line_total:.2f}")
     print(f"Running total: £{total:.2f}\n")
 
-discount_code = input("\nEnter discount code (SAVE10 or FIVER), or press Enter: ").strip().upper()
-
-discount_amount = 0.0
-discount_label = "No discount"
-
-if discount_code == "":
-    discount_label = "No discount"
-elif discount_code == "SAVE10":
-    discount_amount = total * 0.10
-    discount_label = "SAVE10 (10% off)"
-elif discount_code == "FIVER":
-    discount_amount = 5.0
-    discount_label = "FIVER (£5 off)"
-else:
-    print("That code isn't recognised. No discount applied.")
-
-final_total = total - discount_amount
-if final_total < 0:
-    final_total = 0.0
-    discount_amount = total  # so the receipt matches
-
 print("\nReceipt")
-print("-" * 36)
+print("-" * 40)
 for p in purchases:
     print(f"{p['name']} x{p['quantity']} @ £{p['unit_price']:.2f} = £{p['line_total']:.2f}")
-print("-" * 36)
-print(f"Subtotal:  £{total:.2f}")
-print(f"Discount:  -£{discount_amount:.2f} ({discount_label})")
-print(f"Total:     £{final_total:.2f}")
+print("-" * 40)
+print(f"Total: £{total:.2f}")

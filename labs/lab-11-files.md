@@ -1,272 +1,135 @@
 # Lab 11: Reading Data From a File
 
-### **Objective**
-Our program is great, but having the data hard-coded inside the script is inflexible. Real-world programs almost always load their data from external files.
+## Objective
+So far, readings have been hard-coded in the script. Real programs usually load data from files. In this lab you’ll modify your program to read measurements or log data from a `data.csv` file using Python’s `csv` module, and build a list of `DataReading` objects from the file.
 
-The aim of this lab is to modify our program to read measurements or log data from the `data.csv` file using Python's built-in `csv` module.
-
----
-
-## **What is File I/O?**
-
-**File I/O (Input/Output)** is the process of reading data from files and writing data to files. This is essential for real-world applications because it allows programs to work with external data sources and persist information between program runs.
-
-### **Key Concepts**
-- **File Operations**: Opening, reading, writing, and closing files
-- **CSV Format**: Comma-separated values for structured data
-- **Data Loading**: Reading external data into your program
-- **Separation of Concerns**: Data storage separate from program logic
-- **Error Handling**: Managing file operations safely
-- **Resource Management**: Properly closing files after use
+You will:
+1. Import `csv` and prepare an empty list for readings
+2. Open the CSV file, skip the header, and loop over rows
+3. Create a `DataReading` from each row (text, source) and append it to the list
+4. Use the loaded list with your existing analysis code
 
 ---
 
-## **Step 1: Getting Started**
+## Scenario: Data in a File
 
-### **Tasks**
-1. Import the csv module in your script
-2. Prepare an empty list for storing readings
-3. Remove or comment out the hard-coded readings list
-4. Ensure the CSV file is accessible
-
-### **Hints**
-- You'll be modifying the `main_analysis.py` script from the modules lab
-- Look for the `import` statement section at the top of your file
-- Find the hard-coded `readings` list in your `main()` function
-- Think about where to place the empty list declaration
-- Make sure `data.csv` is in the same directory as your Python script
-
-### **Expected Outcomes**
-- The csv module is imported at the top of your script
-- The hard-coded readings list is removed or commented out
-- An empty readings list is created in the main function
-- The CSV file is accessible from your script's location
-
-### **Check Your Work**
-- Is `import csv` at the top of your file?
-- Have you removed or commented out the old readings list?
-- Is there an empty `readings = []` list in your main function?
-- Can you see the `data.csv` file in the same directory?
+Your `data.csv` has two columns: `text` and `source` (with a header row). Each following row is one reading. You’ll open the file, skip the header, and for each row create `DataReading(row[0], row[1])` and append it to a list. The rest of your program (analysis, printing) stays the same but works on this list instead of a hard-coded one.
 
 ---
 
-## **Step 2: Open and Read the File**
+## Task 1: Prepare to Load from File
 
-### **Tasks**
-1. Open the CSV file using the `with` statement
-2. Create a CSV reader object
-3. Skip the header row
-4. Set up a loop to process each data row
+**Your task:**
 
-### **Hints**
-- Use the `with open(...)` syntax for safe file handling
-- Set the mode to `'r'` for reading
-- Include `newline=''` parameter for proper CSV handling
-- Consider adding `encoding='utf-8'` for text compatibility
-- Create a CSV reader object using `csv.reader()`
-- Use `next()` to skip the header row
-- Think about the structure of your CSV file
+- In `main_analysis.py` (or your main script), add `import csv` at the top
+- Remove or comment out the hard-coded list of `DataReading` objects
+- Create an empty list, e.g. `readings = []`, where you will put the loaded objects
+- Ensure `data.csv` is in the same directory as your script (or adjust the path)
 
-### **Expected Outcomes**
-- The CSV file opens successfully without errors
-- A CSV reader object is created
-- The header row is skipped
-- A loop is set up to process each data row
-- File is automatically closed when the `with` block ends
+**Hints:**
 
-### **Check Your Work**
-- Does your file open without errors?
-- Is the CSV reader object created correctly?
-- Is the header row being skipped?
-- Is there a loop set up to process the data?
-- Does the file close automatically?
+- The CSV should have a header line: `text,source`
+- You’ll fill `readings` in Task 3
+
+<details>
+<summary>Possible setup</summary>
+
+```python
+import csv
+from reading_module import DataReading
+
+def main():
+    readings = []  # will load from file
+    # ... open file and fill readings ...
+```
+
+</details>
 
 ---
 
-## **Step 3: Create Objects from File Data**
+## Task 2: Open the File and Loop Over Rows
 
-### **Tasks**
-1. Extract text and source from each row
-2. Create DataReading objects from the file data
-3. Add each object to the readings list
-4. Verify the data is loaded correctly
+**Your task:**
 
-### **Hints**
-- Each row is a list of strings
-- The first element `row[0]` contains the reading text (e.g. measurement or log description)
-- The second element `row[1]` contains the source (e.g. detector name, sensor ID)
-- Create DataReading objects using the extracted data
-- Use the `append()` method to add objects to your list
-- Think about the order of operations in your loop
+- Use `with open("data.csv", "r", newline="", encoding="utf-8") as f:`
+- Create a reader with `csv.reader(f)`
+- Call `next(reader)` once to skip the header row
+- Write a `for` loop over the reader to process each row (you’ll add the object creation in Task 3)
 
-### **Expected Outcomes**
-- DataReading objects are created from each row of data
-- Each object has the correct text and source
-- All objects are added to the readings list
-- The list contains the same number of objects as data rows
-- The rest of your analysis code works with the loaded data
+**Hints:**
 
-### **Check Your Work**
-- Are DataReading objects being created correctly?
-- Does each object have the right text and source?
-- Are all objects being added to the readings list?
-- Does your analysis code still work with the loaded data?
-- Is the data being read from the file instead of hard-coded?
+- `newline=""` is recommended for `csv.reader`
+- After `next(reader)`, each `row` is a list of strings; `row[0]` is text, `row[1]` is source
 
----
+<details>
+<summary>Possible Solution for Task 2</summary>
 
-## **Common Issues to Watch Out For**
+```python
+with open("data.csv", "r", newline="", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    next(reader)  # skip header
+    for row in reader:
+        if len(row) >= 2:
+            text, source = row[0], row[1]
+            readings.append(DataReading(text, source))
+```
 
-### **File Operations**
-- **Wrong file path**: Make sure the CSV file is in the right location
-- **File permissions**: Ensure you have read access to the file
-- **File encoding**: Use appropriate encoding for text files
-- **File not found**: Check the file name and location carefully
-
-### **CSV Processing**
-- **Header handling**: Remember to skip the header row
-- **Row structure**: Understand how CSV data is organized
-- **Data types**: CSV data comes as strings, convert if needed
-- **Empty rows**: Handle cases where rows might be empty
-
-### **Object Creation**
-- **Wrong indices**: Make sure you're using the right row positions
-- **Missing data**: Check that all required data is present
-- **Object instantiation**: Verify DataReading objects are created correctly
-- **List management**: Ensure objects are properly added to the list
-
-### **Integration Issues**
-- **Import problems**: Make sure the DataReading class is imported
-- **Variable scope**: Ensure readings list is accessible where needed
-- **Data flow**: Verify data moves correctly through your program
-- **Error handling**: Consider what happens if the file can't be read
+</details>
 
 ---
 
-## **Testing Your Solutions**
+## Task 3: Create DataReading Objects from Each Row
 
-### **Test Scenarios**
-1. **Basic file reading**: Verify the CSV file opens and reads
-2. **Data extraction**: Check that text and source are extracted correctly
-3. **Object creation**: Ensure DataReading objects are created properly
-4. **List population**: Verify all objects are added to the readings list
-5. **Integration**: Test that existing analysis code still works
+**Your task:**
 
-### **Expected Results**
-- CSV file opens without errors
-- All rows are processed (except header)
-- DataReading objects are created with correct data
-- Readings list contains all objects from the file
-- Analysis functions work with the loaded data
-- No hard-coded data remains in the program
+- Inside the loop, take `row[0]` as the reading text and `row[1]` as the source
+- Create `DataReading(text, source)` and append it to `readings`
+- Optionally check that each row has at least two columns before using it
+- After the loop, the rest of your code can use `readings` as before (e.g. print word counts, run analysis)
 
-### **Verification Steps**
-1. **Run your program** and check for errors
-2. **Verify file reading** - check console output for file operations
-3. **Inspect the readings list** - print its length and contents
-4. **Test analysis functions** - ensure they work with loaded data
-5. **Check data accuracy** - compare with the original CSV file
+**Hints:**
 
----
+- Handle malformed rows (e.g. `if len(row) >= 2:`) to avoid index errors
+- If the file is missing, `open(...)` will raise `FileNotFoundError`; you can add a `try...except` later if you want
 
-## **Extension Ideas (Optional)**
+<details>
+<summary>Possible Solution for Task 3</summary>
 
-### **Enhanced File Handling**
-- **Error handling**: Add try-except blocks for file operations
-- **File validation**: Check if the file exists before opening
-- **Data validation**: Verify CSV structure and content
-- **Multiple file support**: Handle different CSV files
+```python
+for row in reader:
+    if len(row) >= 2:
+        readings.append(DataReading(row[0], row[1]))
+```
 
-### **Data Processing**
-- **Data cleaning**: Remove extra whitespace or invalid characters
-- **Data filtering**: Skip rows that don't meet certain criteria
-- **Data transformation**: Modify data as it's loaded
-- **Data statistics**: Show information about the loaded data
-
-### **User Experience**
-- **Progress indicators**: Show loading progress for large files
-- **File selection**: Allow users to choose which file to load
-- **Configuration**: Make file paths configurable
-- **Logging**: Record file operations for debugging
+</details>
 
 ---
 
-## **Running Your Program**
+## Example `data.csv` Format
 
-### **Basic Execution**
-- Make sure `data.csv` is in the same directory
-- Run your modified `main_analysis.py` script
-- Check that data is loaded from the file
-- Verify that analysis results are correct
-
-### **Troubleshooting**
-- **File not found**: Check file name and location
-- **Import errors**: Verify DataReading class import
-- **Data issues**: Check CSV file format and content
-- **Logic errors**: Ensure data flows correctly through your program
+```csv
+text,source
+"Temperature spike detected in Sector 7 cooling system",Detector A
+"Pressure nominal in Detector A",Detector A
+```
 
 ---
 
-## **Why File I/O?**
+## Key Concepts Demonstrated
 
-File I/O is powerful because it:
-- **Separates data from code** - Data can be updated without changing code
-- **Enables data persistence** - Information survives between program runs
-- **Supports external data sources** - Work with data from other systems
-- **Improves flexibility** - Programs can work with different datasets
-- **Enables automation** - Process files without manual data entry
-- **Supports collaboration** - Multiple people can work with the same data
+- **File I/O**: `open()` with `with` so the file is closed automatically
+- **CSV**: `csv.reader()` to parse rows; first row is often the header
+- **Separation of data and code**: Change the data by editing the file, not the program
 
 ---
 
-## **Real-World Applications**
+## Common Issues
 
-File I/O is used everywhere in Python:
-- **Data analysis**: Loading datasets from CSV, Excel, or database files
-- **Web applications**: Reading configuration files and user data
-- **Automation scripts**: Processing log files and reports
-- **Scientific computing**: Loading experimental data and results
-- **Business applications**: Processing customer data and transactions
-- **System administration**: Reading configuration and log files
+- **FileNotFoundError** — Run the script from the directory that contains `data.csv`, or use the full path to the file.
+- **Wrong columns** — Ensure the CSV has a header and that you use `row[0]` and `row[1]` in the right order (text, source).
 
 ---
 
-## **File Handling Best Practices**
+## Next Steps
 
-### **Safe File Operations**
-- **Use with statements**: Automatic file closing and error handling
-- **Specify encoding**: Handle text files properly
-- **Check file existence**: Verify files exist before opening
-- **Handle errors gracefully**: Provide meaningful error messages
-
-### **Data Processing**
-- **Validate input**: Check data structure and content
-- **Handle edge cases**: Empty files, missing data, malformed content
-- **Process efficiently**: Read only what you need
-- **Clean up resources**: Ensure files are properly closed
-
-### **Code Organization**
-- **Separate concerns**: Keep file I/O separate from business logic
-- **Reusable functions**: Create functions for common file operations
-- **Clear naming**: Use descriptive variable and function names
-- **Documentation**: Explain file format and processing logic
-
----
-
-## **Solutions**
-
-**Complete code examples for all exercises are available in the `solutions/lab-11` folder.**
-
-- `solutions/file_reader.py` - Complete solution with file reading
-- `solutions/step_by_step/` - Individual step solutions
-
----
-
-**Remember**: 
-- Start with basic file operations and build complexity gradually
-- Always test your file reading with small, known datasets
-- Use appropriate error handling for file operations
-- Keep file I/O separate from your main program logic
-- File handling is essential for building real-world applications
-
-This lab introduces you to one of the most important concepts in Python programming - reading data from external files! 
+In the final case study, you’ll tie together file loading, the `DataReading` class, analysis by source, and writing a report to a file.
