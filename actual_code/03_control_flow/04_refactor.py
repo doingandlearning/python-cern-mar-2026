@@ -49,3 +49,10 @@ if experiment == assigned_experiment:
 else:
     print("You are not assigned to this experiment.")
     
+
+
+test_score = 10
+if test_score < 40:
+  print("F")
+elif test_score < 50:
+  print("E")  # 40-50
