@@ -1,57 +1,61 @@
-# Lab 4: Analyzing Experimental Data
+# Lab 4: Analyzing Experimental Data with Lists
 
-The aim of this lab is to get comfortable working with lists, one of the most common data structures in Python. We'll use a list of measurement or log descriptions (e.g. sensor readings, experiment notes) to perform some simple, real-world text analysis—the kind of task you might do when summarising lab data.
+## Objective
+In this lab, you'll get comfortable working with lists by analysing a list of measurement or log descriptions (e.g. sensor readings, experiment notes). You'll count items, compute simple statistics, and search by keyword - the kind of task you might do when summarising lab data.
 
-This lab is made up of 4 steps:
-1. Start with a list of readings
-2. Count the readings
-3. Calculate the average reading length
-4. Search for readings by keyword or topic
-
----
-
-## Step 1: Create a New File
-
-**Your Task:** Set up your workspace for the data analysis lab.
-
-**What to do:**
-1. Create a new Python file called `data_analysis.py`
-2. Think about what you'll need to import (hint: you probably don't need any special imports for this lab)
-
-**Expected outcome:**
-- You should have an empty Python file ready to work with
-- The file should be named appropriately for this lab
+You will:
+1. Create and populate a list of readings
+2. Count readings and calculate average word count per reading
+3. Search the list for readings that contain a keyword
+4. Display results in a clear format
 
 ---
 
-## Step 2: Start with a list of readings
+## Scenario: Analysing a List of Readings
 
-**Your Task:** Create a list of measurement or log descriptions to work with.
+You have a collection of short text readings (log lines, sensor messages, or experiment notes). You want to know how many there are, how long they are on average (in words), and which ones mention a given keyword. This uses lists, loops, and string methods.
 
-**What to do:**
-1. Create a variable called `readings`
-2. Add at least 8-10 short descriptions to your list (e.g. sensor alerts, experiment notes, detector status messages)
-3. Make sure each item is a string (enclosed in quotes)
-4. Use a variety of topics (temperature, pressure, detector status, calibration, etc.)
+---
+
+## Task 1: Set Up the File
+
+Create a new Python file `data_analysis.py` for this lab.
+
+**Your task:**
+
+- Create the file (you likely don’t need any imports for the basic steps)
+- You’ll add the list and logic in the next tasks
 
 **Hints:**
-- Remember that lists use square brackets `[]`
-- Each reading should be a separate string
-- You can use realistic lab-style messages or make them up
-- Include a variety of topics to make your analysis interesting
 
-**Expected outcome:**
-- You should have a list with multiple readings
-- Each reading should be a short, descriptive string
-- The list should contain different types of data or sources
-
-**Check your work:**
-- Does your list have the right number of readings?
-- Are all the readings properly formatted as strings?
-- Do you have a good variety of topics?
+- A new empty `.py` file is enough to start; add the list in Task 2
 
 <details>
-<summary>Possible list</summary>
+<summary>Possible Solution for Task 1</summary>
+
+Create a file named `data_analysis.py`. No code required yet.
+
+</details>
+
+---
+
+## Task 2: Create a List of Readings
+
+In `data_analysis.py`, create a variable `readings` containing 8–10 short strings (measurement or log descriptions).
+
+**Your task:**
+
+- Create a variable called `readings` assigned to a list
+- Add at least 8–10 strings (e.g. sensor alerts, detector status, calibration messages)
+- Use a variety of topics (temperature, pressure, detector, calibration, etc.)
+
+**Hints:**
+
+- Lists use square brackets `[]`; each item is a string in quotes
+- Use realistic lab-style messages so that keyword search (Task 4) is interesting
+
+<details>
+<summary>Possible list of readings</summary>
 
 ```python
 readings = [
@@ -67,152 +71,119 @@ readings = [
     "Shielding survey completed no issues found"
 ]
 ```
+
 </details>
 
 ---
 
-## Step 3: Count the Readings and Average Length
+## Task 3: Count Readings and Average Word Length
 
-**Your Task:** Analyze basic statistics about your readings.
+Analyse basic statistics over your list.
 
-**What to do:**
-1. Count how many readings you have in your list
-2. Calculate the average number of words per reading
-3. Display both results in a user-friendly format
+**Your task:**
 
-**Hints:**
-- Think about what function tells you how many items are in a list
-- To count words, you'll need to loop through each reading
-- The `.split()` method can help you break a string into words
-- Remember to initialize a counter variable before your loop
-
-**Expected outcome:**
-- Your program should tell you how many readings there are
-- It should calculate and display the average word count
-- The output should be clear and readable
-
-**Check your work:**
-- Does the reading count match what you expect?
-- Is the average word count reasonable?
-- Are your results displayed clearly?
-
----
-
-## Step 4: Search for readings by keyword
-
-**Your Task:** Create a search so users can find readings that mention a specific keyword or topic.
-
-**What to do:**
-1. Ask the user what keyword they want to search for
-2. Look through all readings to find matches
-3. Count how many readings mention that keyword
-4. Display the matching readings and the final count
+- Count how many readings are in the list
+- Calculate the average number of words per reading (total words ÷ number of readings)
+- Print the count and the average in a clear way
 
 **Hints:**
-- Use the `input()` function to get the search term from the user
-- You'll need another loop to check each reading
-- Think about how to check if one string contains another
-- Consider making your search case-insensitive for better results
-- Keep track of how many matches you find
 
-**Expected outcome:**
-- Users should be able to search for any keyword (e.g. "temperature", "detector", "calibration")
-- The program should find and display matching readings
-- It should show the total count of matches
-- The search should work regardless of capitalization
+- Use `len(readings)` for the count
+- Loop over each reading, use `.split()` to get words, and sum the word counts
+- Initialise a variable (e.g. `total_words = 0`) before the loop and add each reading’s word count to it
 
-**Check your work:**
-- Try searching for different keywords (some common, some rare)
-- Does the search find the right readings?
-- Does it handle capitalization correctly?
-- Are the results displayed clearly?
+<details>
+<summary>Possible Solution for Task 3</summary>
+
+```python
+total_readings = len(readings)
+print(f"There are {total_readings} readings in the list.")
+
+total_words = 0
+for reading in readings:
+    total_words += len(reading.split())
+average_words = total_words / total_readings
+print(f"The average reading length is {average_words:.1f} words.")
+```
+
+</details>
 
 ---
 
-## Putting It All Together
+## Task 4: Search for Readings by Keyword
 
-**Final Challenge:** Make sure all parts work together smoothly.
+Let the user search for a keyword and show which readings contain it.
 
-**What to do:**
-1. Test your complete program with different search terms
-2. Make sure all the statistics are calculated correctly
-3. Verify that the output is clear and professional
-4. Consider adding some formatting to make results easier to read
+**Your task:**
+
+- Use `input()` to ask for a search keyword
+- Loop through `readings` and find every reading that contains that keyword (case-insensitive)
+- Print each matching reading and the total number of matches
 
 **Hints:**
-- Test with keywords you know are in your readings
-- Test with keywords that aren't in your readings
-- Make sure your average calculation is mathematically correct
-- Consider adding some visual separation between different sections
+
+- Use `keyword.lower() in reading.lower()` for case-insensitive matching
+- Use a counter (e.g. `matching_count = 0`) and increment it for each match
+- If there are no matches, print a message saying so
+
+<details>
+<summary>Possible Solution for Task 4</summary>
+
+```python
+search_term = input("What keyword would you like to search for? ")
+matching_count = 0
+print(f"\nReadings containing '{search_term}':")
+for reading in readings:
+    if search_term.lower() in reading.lower():
+        print(f"  • {reading}")
+        matching_count += 1
+if matching_count == 0:
+    print(f"No readings found containing '{search_term}'.")
+else:
+    print(f"\nFound {matching_count} reading(s) containing '{search_term}'.")
+```
+
+</details>
 
 ---
 
-## Checks for Understanding
+## Example Interaction
 
-Before moving to the next lab, make sure you can answer these questions:
+```
+There are 10 readings in the list.
+The average reading length is 5.8 words.
 
-### Basic Concepts:
-- [ ] Can you explain how lists work in Python?
-- [ ] Do you understand how to loop through a list?
-- [ ] Can you explain what the `.split()` method does?
-- [ ] Do you know how to check if one string contains another?
+What keyword would you like to search for? detector
 
-### Practical Skills:
-- [ ] Can you create and populate a list with data?
-- [ ] Can you calculate statistics from list data?
-- [ ] Can you search through a list for specific content?
-- [ ] Can you handle user input and provide meaningful output?
+Readings containing 'detector':
+  • Pressure nominal in Detector A
+  • Anomaly detected in particle count sensor
+  • High voltage supply stable across all channels
+  • Trigger rate above threshold in forward region
 
-### If you answered "No" to any questions:
-- Review the relevant sections above
-- Check the solutions folder for complete code examples
-- Ask for help if needed
+Found 4 reading(s) containing 'detector'.
+```
 
 ---
 
-## Common Issues and Solutions
+## Key Concepts Demonstrated
 
-### Problem: "NameError: name 'readings' is not defined"
-**Solution:** Make sure you've created your readings list before trying to use it.
-
-### Problem: Average calculation gives 0 or wrong results
-**Solution:** Check that you're initializing your counter variable to 0 before the loop.
-
-### Problem: Search doesn't find obvious matches
-**Solution:** Make sure you're using `.lower()` on both the reading and search term.
-
-### Problem: Program crashes when searching
-**Solution:** Make sure you're properly handling the case where no matches are found.
+- **Lists**: Creating and indexing a list of strings
+- **`len()`**: Number of items in a list
+- **Loops**: Iterating over each item in a list
+- **String methods**: `.split()` for words, `.lower()` for case-insensitive search
+- **`in`**: Checking if a substring is in a string
 
 ---
 
-## What's Next?
+## Common Issues
 
-In the next lab, you'll learn about:
-- More advanced list operations
-- Working with other container types (tuples, sets)
-- List comprehensions and advanced data processing
-
-**Ready to continue?** Move on to Lab 5: Advanced Container Operations!
+- **NameError: name 'readings' is not defined** — Define the list before you use it.
+- **Average is 0 or wrong** — Initialise `total_words = 0` before the loop and add each reading’s word count inside the loop.
+- **Search misses obvious matches** — Use `.lower()` on both the search term and each reading when comparing.
 
 ---
 
-## Solutions
+## Next Steps
 
-**Complete code examples for all exercises are available in the `solutions/` folder.**
-
-- `solutions/data_analysis.py` - Complete data analysis solution
-- `solutions/step_by_step/` - Individual step solutions
-
-**Try to solve the exercises yourself first, then check the solutions if you get stuck!**
-
----
-
-## Questions?
-
-If you get stuck or have questions:
-1. Check the error messages carefully
-2. Review the concepts in the notes
-3. Look at the solutions folder for examples
-4. Ask for help from your instructor or classmates
-5. Remember: everyone learns at their own pace! 
+In the next lab, you’ll wrap this logic in functions to build a reusable data analysis toolkit.

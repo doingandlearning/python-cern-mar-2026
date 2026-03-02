@@ -1,25 +1,39 @@
 # Lab 5: Building a Data Analysis Toolkit with Functions
 
-The aim of this lab is to practice writing functions to create a reusable, organized toolkit. We will refactor our previous data analysis script into a set of functions that can be easily called and tested.
+## Objective
+In this lab, you'll refactor your data analysis script into a set of reusable functions. You'll define functions that take parameters and return values, so the same logic can be called from different places and tested easily.
 
-This lab is made up of 4 steps:
-1. Set up your script with the readings data.
-2. Write a function to get the word count of a single reading.
-3. Write a function to search for readings containing a keyword.
-4. Write a main `analyse_all_readings` function that uses the other functions.
+You will:
+1. Set up a script with the readings data
+2. Write a function to get the word count of a single reading
+3. Write a function to find readings containing a keyword
+4. Write a main function that uses the others to analyse all readings
 
 ---
 
-## Step 1: Getting Started
+## Scenario: Reusable Data Analysis
 
-**Your Task:** Set up your workspace and prepare the readings data.
+Your list of readings is the same as in Lab 4. This time you'll wrap the logic in functions: one to count words in a string, one to filter by keyword, and one to run the full analysis and print results. This makes the code easier to reuse and test.
 
-**What to do:**
-1. Create a new Python file called `data_analyzer.py`
-2. Copy the readings list below into your file
-3. Make sure the file runs without errors
+---
 
-**Readings data (copy this into your file):**
+## Task 1: Set Up the Script and Data
+
+Create a file `data_analyzer.py` and add the readings list.
+
+**Your task:**
+
+- Create `data_analyzer.py`
+- Add the same `readings` list as in Lab 4 (or the list from the Lab 4 instructions)
+- Run the file to confirm it has no syntax errors
+
+**Hints:**
+
+- You don’t need to change the list; just have it in the file so later tasks can use it
+
+<details>
+<summary>Possible readings list</summary>
+
 ```python
 readings = [
     "Temperature spike detected in Sector 7 cooling system",
@@ -35,198 +49,118 @@ readings = [
 ]
 ```
 
-**Expected outcome:**
-- You should have a Python file with the readings list
-- The file should run without errors
-- You're ready to start writing functions
-
-**Check your work:**
-- Does your file contain the readings list?
-- Can you run the file without errors?
-- Are you ready to add functions?
+</details>
 
 ---
 
-## Step 2: A Function to Get Word Count
+## Task 2: Write a Function to Get Word Count
 
-**Your Task:** Create a function that counts words in a single reading (e.g. a log line or measurement description).
+Add a function that returns the number of words in a single reading string.
 
-**What to do:**
-1. Write a function called `get_word_count(reading_text)`
-2. The function should take a single reading string as an argument
-3. It should return the number of words in that reading
+**Your task:**
+
+- Define `get_word_count(reading_text)` that takes one string argument
+- Inside the function, use `.split()` and `len()` to count words
+- Return the count (an integer)
 
 **Hints:**
-- Start with `def get_word_count(reading_text):`
-- Use the `.split()` method to break the reading into words
-- Use `len()` to count the words
-- Remember to use the `return` keyword
 
-**Expected outcome:**
-- A function that can count words in any reading
-- The function should work when called with different readings
+- Use `def get_word_count(reading_text):` and indent the body
+- `return len(reading_text.split())` is enough for the body
 
-**Check your work:**
-- Does your function definition start with `def`?
-- Does it take a parameter?
-- Does it return a number?
-- Can you test it with `print(get_word_count("Temperature spike in Sector 7"))`?
+<details>
+<summary>Possible Solution for Task 2</summary>
+
+```python
+def get_word_count(reading_text):
+    return len(reading_text.split())
+```
+
+</details>
 
 ---
 
-## Step 3: A Function to Find Readings with a Keyword
+## Task 3: Write a Function to Find Readings with a Keyword
 
-**Your Task:** Create a function that searches for readings containing a specific keyword.
+Add a function that returns a list of readings that contain a given keyword (case-insensitive).
 
-**What to do:**
-1. Write a function called `find_readings_with_keyword(list_of_readings, keyword)`
-2. The function should take the full list of readings and a search term
-3. It should return a new list containing only matching readings
+**Your task:**
+
+- Define `find_readings_with_keyword(list_of_readings, keyword)` with two parameters
+- Create an empty list, loop over `list_of_readings`, and for each reading check if `keyword.lower()` is in `reading.lower()`
+- If it is, append that reading to the list
+- Return the list of matching readings
 
 **Hints:**
-- Start with `def find_readings_with_keyword(list_of_readings, keyword):`
-- Create an empty list to store matching readings
-- Loop through each reading in the list
-- Check if the keyword (in lowercase) is in the reading (also in lowercase)
-- Add matching readings to your list
-- Return the list of matches
 
-**Expected outcome:**
-- A function that can search through any list of readings
-- It should return only the readings that contain the keyword
-- The search should be case-insensitive
+- Use a `for` loop; use `.lower()` on both the keyword and the reading when comparing
+- Return the list you built
 
-**Check your work:**
-- Does your function take two parameters?
-- Does it create a new list for results?
-- Does it loop through the readings?
-- Does it return the matching readings?
+<details>
+<summary>Possible Solution for Task 3</summary>
+
+```python
+def find_readings_with_keyword(list_of_readings, keyword):
+    matching = []
+    for reading in list_of_readings:
+        if keyword.lower() in reading.lower():
+            matching.append(reading)
+    return matching
+```
+
+</details>
 
 ---
 
-## Step 4: A Main Analysis Function
+## Task 4: Write a Main Analysis Function
 
-**Your Task:** Create a main function that orchestrates the analysis and prints results.
+Add a function that analyses all readings and prints the average word count (and optionally calls the search function).
 
-**What to do:**
-1. Write a function called `analyse_all_readings(list_of_readings)`
-2. The function should calculate and display the average reading length (words per reading)
-3. Use your `get_word_count()` function from Step 2
+**Your task:**
+
+- Define `analyse_all_readings(list_of_readings)` that takes the full list
+- Use a loop and your `get_word_count()` to sum the word count of every reading
+- Compute the average (total words ÷ number of readings) and print it along with the total count
+- At the end of the script, call `analyse_all_readings(readings)` (and optionally test `find_readings_with_keyword` with a keyword)
 
 **Hints:**
-- Start with `def analyse_all_readings(list_of_readings):`
-- Create a counter for total words
-- Loop through each reading
-- Call your `get_word_count()` function for each reading
-- Calculate the average and print it
 
-**Expected outcome:**
-- A function that analyzes all readings
-- It should display the average word count
-- The output should be user-friendly
+- Initialise `total_words = 0`, then in the loop add `get_word_count(reading)` to it
+- Use `len(list_of_readings)` for the number of readings
+- Use an f-string or multiple `print()` calls to show the results
 
-**Check your work:**
-- Does your function call `get_word_count()`?
-- Does it calculate the average correctly?
-- Does it print the results clearly?
+<details>
+<summary>Possible Solution for Task 4</summary>
 
----
+```python
+def analyse_all_readings(list_of_readings):
+    total_words = 0
+    for reading in list_of_readings:
+        total_words += get_word_count(reading)
+    average = total_words / len(list_of_readings)
+    print(f"Total readings: {len(list_of_readings)}")
+    print(f"Total words: {total_words}")
+    print(f"Average words per reading: {average:.1f}")
 
-## Tying It All Together
+# Call it when the script runs
+if __name__ == "__main__":
+    analyse_all_readings(readings)
+    matches = find_readings_with_keyword(readings, "detector")
+    print(f"Readings containing 'detector': {len(matches)}")
+```
 
-**Your Task:** Call your functions to produce the final output.
-
-**What to do:**
-1. After defining all your functions, add code to call them
-2. Test your `analyse_all_headlines()` function
-3. Test your search function with different keywords
-4. Display the results in a clear format
-
-**Hints:**
-- Call `analyse_all_readings(readings)` to see the analysis
-- Test searching for different keywords like "detector", "temperature", "calibration"
-- Use loops to display search results clearly
-- Make your output organized and readable
-
-**Expected outcome:**
-- A complete program that demonstrates all your functions
-- Clear output showing the analysis results
-- Search results displayed in an organized way
-
-**Check your work:**
-- Does your program run without errors?
-- Does it show the average reading length?
-- Can you search for different keywords?
-- Are the results displayed clearly?
+</details>
 
 ---
 
-## Checks for Understanding
+## Key Concepts Demonstrated
 
-Before moving to the next lab, make sure you can answer these questions:
-
-### Basic Concepts:
-- [ ] Can you explain what a function is and why we use them?
-- [ ] Do you understand the difference between parameters and arguments?
-- [ ] Can you explain what the `return` keyword does?
-- [ ] Do you know how to call a function?
-
-### Practical Skills:
-- [ ] Can you write a function that takes parameters?
-- [ ] Can you write a function that returns a value?
-- [ ] Can you call functions from within other functions?
-- [ ] Can you organize code into logical functions?
-
-### If you answered "No" to any questions:
-- Review the relevant sections above
-- Check the solutions folder for complete code examples
-- Ask for help if needed
+- **Function definition**: `def name(params):` and indented body
+- **Parameters and return**: Passing data in, returning a value with `return`
+- **Reuse**: One function (`get_word_count`) used inside another (`analyse_all_readings`)
 
 ---
 
-## Common Issues and Solutions
+## Next Steps
 
-### Problem: "NameError: name 'get_word_count' is not defined"
-**Solution:** Make sure you've defined your function before trying to call it.
-
-### Problem: Function doesn't return anything
-**Solution:** Check that you're using the `return` keyword in your function.
-
-### Problem: Function parameters don't work
-**Solution:** Make sure your function definition matches how you're calling it.
-
-### Problem: Search function returns empty results
-**Solution:** Check that you're converting both the keyword and reading to lowercase.
-
----
-
-## What's Next?
-
-In the next lab, you'll learn about:
-- More advanced function features
-- Working with different data types
-- Building larger, more complex programs
-
-**Ready to continue?** Move on to Lab 6: Advanced Functions!
-
----
-
-## Solutions
-
-**Complete code examples for all exercises are available in the `solutions/lab-05` folder.**
-
-- `solutions/data_analyzer.py` - Complete solution with all functions
-- `solutions/step_by_step/` - Individual step solutions
-
-**Try to solve the exercises yourself first, then check the solutions if you get stuck!**
-
----
-
-## Questions?
-
-If you get stuck or have questions:
-1. Check the error messages carefully
-2. Review the concepts in the notes
-3. Look at the solutions folder for examples
-4. Ask for help from your instructor or classmates
-5. Remember: everyone learns at their own pace! 
+In the next lab, you’ll use list comprehensions to do similar operations in a more compact way.

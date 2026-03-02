@@ -13,3 +13,14 @@ print(f'1 + 1 = {1 + 1}')
 print(f"""First line
 last line""")
 print(f'''''')
+
+print(full_name.lower())
+print(full_name.upper())
+print(full_name.center(50))
+print(full_name.ljust(50))
+print(full_name.rjust(50))
+
+print(full_name.find("not in there"))
+
+#0123456789
+"Kevin Cunningham"

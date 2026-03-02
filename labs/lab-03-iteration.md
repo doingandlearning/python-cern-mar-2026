@@ -1,232 +1,227 @@
-# Lab 3: Iteration and Control Flow
+# Lab 3: Building a Calibration Value Guessing Game with Control Flow
 
-The aim of this lab is to create a simple guessing game. This will give you practice with `while` or `for` loops, `if/elif/else` statements, and handling user input.
+## Objective
+In this lab, you'll build an interactive guessing game where the computer picks a secret "calibration value" (a number between 1 and 50) and the player tries to guess it. You'll use `for` or `while` loops, `if/elif/else`, and `break` - similar to how interactive tools respond to user input.
 
-The logic of the game is:
-
-- The program randomly selects a secret "calibration value" between 1 and 50 (simulating a sensor reading range).
-- The player has a fixed number of attempts to guess it.
-- After each guess, the program tells the player if their guess was too high, too low, or correct.
-- The game ends when the player guesses the number or runs out of attempts.
+You will:
+1. Use loops to give the player multiple attempts
+2. Use `if/elif/else` for conditional logic
+3. Use `break` to exit a loop when the guess is correct
+4. Track whether the player won or lost and display the result
 
 ---
 
-## Step 1: Setting up the Game
+## Scenario: Calibration Value Guessing Game
 
-**Your Task:** Set up the basic structure for your guessing game.
+The program randomly selects a secret value between 1 and 50 (like a sensor reading range). The player has a fixed number of attempts to guess it. After each guess, the program says whether the guess was too high, too low, or correct. The game ends when the player guesses correctly or runs out of attempts.
 
-**What to do:**
+---
 
-1. Create a new Python file for your game
-2. Import the module you need for generating random numbers (`import random`)
-3. Create a variable to store the secret calibration value
-4. Print a welcome message explaining the game rules
+## Task 1: Set Up the Game Structure
+
+Create a file `guessing_game.py`:
+
+**Your task:**
+
+- Import the `random` module
+- Create a variable to store the secret calibration value using `random.randint(1, 50)`
+- Print a welcome message that explains the rules (range 1–50, number of attempts)
+- Decide how many attempts the player gets (e.g. 5)
 
 **Hints:**
 
-- Look up how to generate a random integer between 1 and 50
-- Make your welcome message clear and friendly
-- Tell the player how many attempts they have
+- Use `import random` at the top of the file
+- `random.randint(a, b)` returns a random integer N such that `a <= N <= b`
+- Make the welcome message clear and friendly
 
-**Expected outcome:**
+<details>
+<summary>Possible Solution for Task 1</summary>
 
-- Your program should generate a random number when it runs
-- It should display a welcome message explaining the rules
-- The secret value should be different each time you run the program
+```python
+import random
 
-**Check your work:**
+secret_value = random.randint(1, 50)
+attempts = 5
 
-- Run the program multiple times - does the secret number change?
-- Is your welcome message clear and helpful?
-- Does the program run without errors?
+print("=" * 50)
+print("Welcome to the Calibration Value Guessing Game!")
+print("=" * 50)
+print("I'm thinking of a calibration value between 1 and 50.")
+print(f"You have {attempts} attempts to guess it!")
+print()
+```
+
+</details>
 
 ---
 
-## Step 2: The Game Loop
+## Task 2: Create the Game Loop
 
-**Your Task:** Create a loop that gives the player multiple attempts to guess.
+Add a loop that runs once per attempt.
 
-**What to do:**
+**Your task:**
 
-1. Decide how many attempts the player should have
-2. Create a loop that runs that many times
-3. Think about what type of loop would work best for this
+- Use a loop that runs exactly the number of attempts (e.g. `for attempt in range(attempts):`)
+- Inside the loop, print which attempt this is (e.g. "Attempt 1 of 5")
+- Leave space for the guessing logic in the next task
 
 **Hints:**
 
-- You know exactly how many attempts the player gets, so what type of loop makes sense?
-- Remember that `range(5)` gives you numbers 0, 1, 2, 3, 4
-- All the game logic will go inside this loop
+- A `for` loop with `range(attempts)` runs the right number of times
+- `range(5)` produces 0, 1, 2, 3, 4 — use `attempt + 1` when displaying to the user
 
-**Expected outcome:**
+<details>
+<summary>Possible Solution for Task 2</summary>
 
-- Your program should loop the correct number of times
-- The loop should be ready to contain the guessing logic
+```python
+player_won = False
 
-**Check your work:**
+for attempt in range(attempts):
+    print(f"Attempt {attempt + 1} of {attempts}")
+    # Guessing logic will go here
+```
 
-- Does your loop run the right number of times?
-- Is the loop structure clear and readable?
+</details>
 
 ---
 
-## Step 3: Getting and Checking the User's Guess
+## Task 3: Get the Guess and Give Feedback
 
-**Your Task:** Add the core game logic inside your loop.
+Inside the loop, get the player's guess and compare it to the secret value.
 
-**What to do:**
+**Your task:**
 
-1. Ask the user for their guess inside the loop
-2. Convert their input to a number
-3. Compare their guess to the secret number
-4. Give them appropriate feedback
-5. Handle the case when they guess correctly
+- Ask for the player's guess with `input()` and convert it to an integer
+- If the guess is less than 1 or greater than 50, print a message and use `continue` to skip to the next attempt (optional)
+- Use `if/elif/else` to check:
+  - If `guess == secret_value`: print a success message, set a variable so you know they won, and use `break` to exit the loop
+  - Elif `guess < secret_value`: print "Too low! Try a higher value."
+  - Else: print "Too high! Try a lower value."
+- Optionally print how many attempts remain
 
 **Hints:**
 
-- Remember that `input()` gives you a string - you need to convert it
-- Think about the three possible outcomes: too low, too high, or correct
-- What should happen when they guess correctly? How do you exit the loop early?
-- Make your feedback messages helpful and encouraging
+- `input()` returns a string; use `int(...)` to convert
+- Use `break` to exit the loop as soon as they guess correctly
+- Use a variable (e.g. `player_won = True`) so that after the loop you can tell if they won
 
-**Expected outcome:**
+<details>
+<summary>Possible Solution for Task 3</summary>
 
-- Players should be able to input their guesses
-- They should get clear feedback after each guess
-- The game should end immediately if they guess correctly
+```python
+for attempt in range(attempts):
+    print(f"Attempt {attempt + 1} of {attempts}")
+    guess = int(input("Enter your guess (1-50): "))
 
-**Check your work:**
+    if guess < 1 or guess > 50:
+        print("Please enter a number between 1 and 50!")
+        continue
 
-- Try guessing too low, too high, and correctly
-- Are your feedback messages clear and helpful?
-- Does the game end when you guess correctly?
+    if guess == secret_value:
+        print("Congratulations! You've guessed correctly!")
+        print(f"The secret value was {secret_value}!")
+        player_won = True
+        break
+    elif guess < secret_value:
+        print("Too low! Try a higher value.")
+    else:
+        print("Too high! Try a lower value.")
+
+    remaining = attempts - (attempt + 1)
+    if remaining > 0:
+        print(f"You have {remaining} attempt(s) remaining.")
+    print()
+```
+
+</details>
 
 ---
 
-## Step 4: Handling a Win or Loss
+## Task 4: Display the Final Result
 
-**Your Task:** Determine the final outcome and display appropriate messages.
+After the loop ends, show whether the player won or lost.
 
-**What to do:**
+**Your task:**
 
-1. Figure out how to tell if the player won or lost
-2. Display different messages for winning vs. losing
-3. If they lost, show them what the secret number was
+- If the player won (you tracked this with a variable), print a congratulatory message
+- If the player lost, print a message and show the secret value
+- Print a closing message (e.g. "Thanks for playing!")
 
 **Hints:**
 
-- Think about how you can track whether the player has won
-- What happens if the loop finishes without a correct guess?
-- How can you tell the difference between winning and losing?
+- Use `if player_won:` ... `else:` after the loop
+- The variable `guess` still holds their last guess; `secret_value` is unchanged
 
-**Expected outcome:**
+<details>
+<summary>Possible Solution for Task 4</summary>
 
-- Winners should get a congratulatory message
-- Losers should see what the secret number was
-- The game should clearly indicate the final result
+```python
+print("=" * 50)
+if player_won:
+    print("You won! Well done!")
+else:
+    print("Game Over! You've run out of attempts.")
+    print(f"The secret value was {secret_value}.")
 
-**Check your work:**
+print("Thanks for playing the Calibration Value Guessing Game!")
+print("=" * 50)
+```
 
-- Test both winning and losing scenarios
-- Are the final messages clear and appropriate?
-- Does the program handle both outcomes correctly?
-
----
-
-## Putting It All Together
-
-**Final Challenge:** Make sure all parts work together smoothly.
-
-**What to do:**
-
-1. Test your complete game multiple times
-2. Try different strategies (guessing high, low, or in the middle)
-3. Make sure the game works whether you win or lose
-4. Add any finishing touches to make it more polished
-
-**Hints:**
-
-- Test edge cases (guessing 1, guessing 50, etc.)
-- Make sure your messages are consistent and helpful
-- Consider adding some personality to your game
+</details>
 
 ---
 
-## Checks for Understanding
+## Example Interaction
 
-Before moving to the next lab, make sure you can answer these questions:
+```
+==================================================
+Welcome to the Calibration Value Guessing Game!
+==================================================
+I'm thinking of a calibration value between 1 and 50.
+You have 5 attempts to guess it!
 
-### Basic Concepts:
+Attempt 1 of 5
+Enter your guess (1-50): 25
+Too low! Try a higher value.
+You have 4 attempt(s) remaining.
 
-- [ ] Can you explain how a `for` loop works?
-- [ ] Do you understand the difference between `if`, `elif`, and `else`?
-- [ ] Can you explain what the `break` statement does?
-- [ ] Do you know how to generate random numbers?
+Attempt 2 of 5
+Enter your guess (1-50): 40
+Too high! Try a lower value.
+You have 3 attempt(s) remaining.
 
-### Practical Skills:
+Attempt 3 of 5
+Enter your guess (1-50): 32
+Congratulations! You've guessed correctly!
+The secret value was 32!
 
-- [ ] Can you create a program that loops a specific number of times?
-- [ ] Can you handle different user inputs and give appropriate responses?
-- [ ] Can you create a program that tracks game state?
-- [ ] Do you understand how to exit a loop early?
-
-### If you answered "No" to any questions:
-
-- Review the relevant sections above
-- Check the solutions folder for complete code examples
-- Ask for help if needed
-
----
-
-## Common Issues and Solutions
-
-### Problem: "NameError: name 'random' is not defined"
-
-**Solution:** Make sure you've imported the random module at the top of your file.
-
-### Problem: "ValueError: invalid literal for int()"
-
-**Solution:** The user entered something that's not a number. Think about how to handle this gracefully.
-
-### Problem: Game doesn't end when guessing correctly
-
-**Solution:** Make sure you're using `break` when the guess is correct.
-
-### Problem: Loop runs too many or too few times
-
-**Solution:** Check your `range()` function - remember it starts at 0.
+==================================================
+You won! Well done!
+Thanks for playing the Calibration Value Guessing Game!
+==================================================
+```
 
 ---
 
-## What's Next?
+## Key Concepts Demonstrated
 
-In the next lab, you'll learn about:
-
-- Working with lists and other container types
-- More complex data structures
-- Processing collections of data
-
-**Ready to continue?** Move on to Lab 4: Container Types!
-
----
-
-## Solutions
-
-**Complete code examples for all exercises are available in the `solutions/` folder.**
-
-- `solutions/guessing_game.py` - Complete game solution
-- `solutions/step_by_step/` - Individual step solutions
-
-**Try to solve the exercises yourself first, then check the solutions if you get stuck!**
+- **Loops**: `for attempt in range(n)` for a fixed number of attempts
+- **Conditional logic**: `if/elif/else` to compare guess and secret value
+- **`break`**: Exit the loop early when the guess is correct
+- **`continue`** (optional): Skip invalid input and go to the next iteration
+- **Boolean flag**: A variable like `player_won` to record the outcome
+- **Random numbers**: `random.randint(a, b)` for the secret value
 
 ---
 
-## Questions?
+## Common Issues
 
-If you get stuck or have questions:
+- **NameError: name 'random' is not defined** — Add `import random` at the top.
+- **ValueError: invalid literal for int()** — The user entered non-numeric input; we don’t handle that yet.
+- **Game doesn’t end when correct** — Use `break` when `guess == secret_value`.
 
-1. Check the error messages carefully
-2. Review the concepts in the notes
-3. Look at the solutions folder for examples
-4. Ask for help from your instructor or classmates
-5. Remember: everyone learns at their own pace!
+---
+
+## Next Steps
+
+In the next lab, you’ll work with lists and use them to analyse collections of data (e.g. experimental readings).

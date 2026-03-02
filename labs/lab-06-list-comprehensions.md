@@ -1,202 +1,144 @@
 # Lab 6: Supercharging Analysis with List Comprehensions
 
-### **Objective**
-The aim of this lab is to use **list comprehensions** to perform powerful data manipulation on your list of readings (measurement or log descriptions) in a single, readable line of code. This is a very common and powerful technique in Python, especially when processing experimental or sensor data.
+## Objective
+In this lab, you'll use **list comprehensions** to transform and filter your list of readings in a single line of code. List comprehensions are a concise, Pythonic way to build new lists from existing ones - very common when processing experimental or sensor data.
+
+You will:
+1. Use a list comprehension to map each reading to its word count
+2. Use a list comprehension to filter readings (e.g. 7 words or fewer)
+3. Combine mapping and filtering in one comprehension (e.g. word counts of readings containing a keyword)
 
 ---
 
-## **What are List Comprehensions?**
-A **list comprehension** is a concise way to create lists by applying operations to existing data. Think of it as a "for loop in one line" that's both readable and efficient.
+## Scenario: Same Data, New Syntax
 
-### **Key Concepts**
-- **Mapping**: Transform each item in a list
-- **Filtering**: Select only items that meet certain criteria
-- **Combining**: Map and filter in a single expression
-- **Readability**: Write complex operations in clear, single lines
+You still have the same `readings` list (from Lab 4 or 5). This time you'll build new lists using comprehensions: `[expression for item in list]` for mapping and `[item for item in list if condition]` for filtering. The result is shorter, readable code.
 
 ---
 
-## **Step 1: Getting Started**
+## Task 1: Set Up the File and Data
 
-### **Tasks**
-1. Create a new Python file, e.g., `comprehensions_analysis.py`
-2. Set up your workspace with the readings data (same list as in Lab 4 or 5)
-3. Verify that your data is loaded correctly
+Create a file `comprehensions_analysis.py` and add the readings list (same as in Lab 4/5).
 
-### **Expected Outcomes**
-- You should have a working Python file
-- The readings list should be loaded and accessible
-- You should be able to print the readings to verify they're loaded
+**Your task:**
 
-### **Check Your Work**
-- Can you print the readings list?
-- Does it contain all 10 readings?
-- Is your file ready for the next steps?
+- Create the file and define or paste in the `readings` list
+- Optionally print `readings` or `len(readings)` to confirm the data is there
 
----
+**Hints:**
 
-## **Step 2: Mapping with List Comprehensions**
+- Use the same list of 8–10 reading strings as in previous labs
 
-A list comprehension is a great way to create a new list by applying an operation to every item in an existing list.
+<details>
+<summary>Possible setup</summary>
 
-### **Tasks**
-1. Create a new list called `reading_lengths` that contains the word count for each reading
-2. Use a list comprehension to transform the data
-3. Print the result to verify your work
+```python
+readings = [
+    "Temperature spike detected in Sector 7 cooling system",
+    "Pressure nominal in Detector A",
+    "Calibration run completed for beam line B2",
+    # ... add the rest from Lab 4 ...
+]
+print(f"Loaded {len(readings)} readings")
+```
 
-### **Hints**
-- The basic syntax is `[expression for item in list]`
-- Your `expression` will involve calling `.split()` and `len()` on each `item`
-- The `item` in your case is each `reading` in the `readings` list
-- Think about what operation you want to apply to each reading
-- Consider how to count words in a string
-
-### **Expected Outcomes**
-- `reading_lengths` should be a list of numbers
-- Each number should represent the word count of the corresponding reading
-- The list should have the same length as your readings list
-
-### **Check Your Work**
-- Does your list have 10 numbers?
-- Can you verify a few word counts manually (e.g. first reading "Temperature spike detected in Sector 7 cooling system" has 8 words)?
-- Are the numbers in the same order as your readings?
+</details>
 
 ---
 
-## **Step 3: Filtering with List Comprehensions**
+## Task 2: Mapping with a List Comprehension
 
-Now, let's use a list comprehension to select only the items that meet a certain criteria.
+Build a list of word counts, one per reading.
 
-### **Tasks**
-1. Create a new list called `short_readings` that contains only the readings with 7 words or fewer
-2. Use a list comprehension with a condition to filter the data
-3. Print the result to verify your work
+**Your task:**
 
-### **Hints**
-- The syntax for filtering is `[item for item in list if condition]`
-- Your `condition` will check the word count of each `reading`
-- Remember to use `.split()` and `len()` as part of your `if condition`
-- Think about what makes a reading "short" (7 words or fewer)
-- Consider how to combine the word counting with the filtering condition
+- Create a variable `reading_lengths` that is a list of the word count of each reading
+- Use a list comprehension: for each `reading` in `readings`, the expression should be the number of words in that reading
+- Print `reading_lengths` to verify (e.g. first value should be the word count of the first reading)
 
-### **Expected Outcomes**
-- `short_readings` should be a list of strings (the actual readings)
-- Only readings with 7 words or fewer should be included
-- The list should be shorter than your original readings list
+**Hints:**
 
-### **Check Your Work**
-- Is your filtered list shorter than the original?
-- Do all readings in the result have 7 words or fewer?
-- Can you manually count words to verify the filtering worked?
-- Are you getting the expected readings?
+- Syntax: `[expression for item in list]`
+- For each `reading`, the number of words is `len(reading.split())`
+
+<details>
+<summary>Possible Solution for Task 2</summary>
+
+```python
+reading_lengths = [len(reading.split()) for reading in readings]
+print("Word counts per reading:", reading_lengths)
+```
+
+</details>
 
 ---
 
-## **Step 4: Combining Mapping and Filtering**
+## Task 3: Filtering with a List Comprehension
 
-This is where list comprehensions really shine. You can filter a list and transform the results in a single, elegant line.
+Build a list of only the "short" readings (e.g. 7 words or fewer).
 
-### **Tasks**
-1. Create a list called `specific_reading_lengths` that contains the word counts of only those readings that include the word "detector" (or "new", if you prefer)
-2. Combine filtering and mapping in a single list comprehension
-3. Print the result to verify your work
+**Your task:**
 
-### **Hints**
-- You'll use the combined syntax: `[expression for item in list if condition]`
-- Your `expression` will get the word count of the `item` (the reading)
-- Your `if condition` will check if the keyword (e.g. "detector") is in the `item`
-- Remember to use `.lower()` to make your check case-insensitive
-- Think about the order: filter first, then map the results
+- Create a variable `short_readings` that contains only readings with 7 words or fewer
+- Use the filtering form: `[item for item in list if condition]`
+- The condition should use the word count of each reading
+- Print `short_readings` or its length to verify
 
-### **Expected Outcomes**
-- `specific_reading_lengths` should be a list of numbers (word counts)
-- Only readings containing your chosen keyword should contribute to this list
-- The list should be shorter than your original readings list
+**Hints:**
 
-### **Check Your Work**
-- Is your result list shorter than the original?
-- Do all the word counts correspond to readings that contain the keyword?
-- Can you manually verify which readings match?
-- Are you getting the expected word counts?
+- Condition: `len(reading.split()) <= 7`
 
----
+<details>
+<summary>Possible Solution for Task 3</summary>
 
-## **Common Issues to Watch Out For**
+```python
+short_readings = [reading for reading in readings if len(reading.split()) <= 7]
+print(f"Readings with 7 words or fewer: {len(short_readings)}")
+print(short_readings)
+```
 
-### **Syntax Errors**
-- **Missing brackets**: List comprehensions must be enclosed in `[]`
-- **Wrong order**: Remember it's `[expression for item in list if condition]`
-- **Missing colons**: Don't forget the `:` after `for` and `if`
-- **Indentation**: List comprehensions should be on one line or properly indented
-
-### **Logic Errors**
-- **Case sensitivity**: Remember to use `.lower()` for case-insensitive searches
-- **Word counting**: Make sure you're splitting on whitespace correctly
-- **Filtering conditions**: Double-check your comparison operators
-- **Empty results**: If you get an empty list, check your filtering condition
-
-### **Performance Considerations**
-- **Large lists**: List comprehensions are efficient but can use memory
-- **Complex expressions**: Keep expressions readable and simple
-- **Nested comprehensions**: Avoid going too deep for readability
+</details>
 
 ---
 
-## **Testing Your Solutions**
+## Task 4: Combining Mapping and Filtering
 
-### **Test Data Verification**
-Use the same readings list as in Lab 4 or 5 (e.g. "Temperature spike detected in Sector 7 cooling system", "Pressure nominal in Detector A", etc.). Verify word counts for a few entries to ensure your comprehensions are correct.
+Build a list of word counts for only the readings that contain a certain keyword.
 
-### **Expected Results**
-- **Step 2**: You should get a list of 10 numbers (word counts per reading).
-- **Step 3**: Only readings with 7 words or fewer should appear in `short_readings`.
-- **Step 4**: Only readings containing your keyword (e.g. "detector" or "new") should contribute word counts to `specific_reading_lengths`.
+**Your task:**
 
----
+- Create a variable `specific_reading_lengths` that contains the word counts of only those readings that contain the word `"detector"` (or another keyword you choose)
+- Use the form `[expression for item in list if condition]`: the expression is the word count, the condition is that the keyword appears in the reading (case-insensitive)
+- Print the result
 
-## **Extension Ideas (Optional)**
+**Hints:**
 
-### **More Complex Comprehensions**
-- Find readings that start with specific words (e.g. "Temperature", "Data")
-- Create a list of reading lengths for readings containing multiple keywords
-- Filter by word count ranges (e.g., 5-8 words)
+- Expression: `len(reading.split())`
+- Condition: `"detector" in reading.lower()`
 
-### **Advanced Filtering**
-- Find readings that contain numbers
-- Select readings that mention specific detectors or sectors
-- Filter by multiple conditions (e.g., contains "detector" AND has ≤8 words)
+<details>
+<summary>Possible Solution for Task 4</summary>
 
-### **Data Analysis**
-- Calculate the average word count of filtered readings
-- Find the longest and shortest readings
-- Create a frequency count of reading lengths
+```python
+specific_reading_lengths = [
+    len(reading.split()) for reading in readings
+    if "detector" in reading.lower()
+]
+print("Word counts of readings containing 'detector':", specific_reading_lengths)
+```
 
----
-
-## **Solutions**
-
-**Complete code examples for all exercises are available in the `solutions/lab-06` folder.**
-
-- `solutions/comprehensions_analysis.py` - Complete solution with all steps
+</details>
 
 ---
 
-## **Why List Comprehensions?**
+## Key Concepts Demonstrated
 
-List comprehensions are powerful because they:
-- **Improve readability** - Complex operations in single lines
-- **Boost performance** - Often faster than equivalent loops
-- **Reduce code** - Less verbose than traditional for loops
-- **Express intent** - Clear what you're trying to accomplish
-- **Follow Python style** - Considered "Pythonic" code
+- **Mapping**: `[expression for item in list]` — build a new list by applying an expression to each item
+- **Filtering**: `[item for item in list if condition]` — keep only items that satisfy the condition
+- **Combining**: `[expression for item in list if condition]` — filter then map in one line
 
 ---
 
-**Remember**: 
-- Start with simple comprehensions and build complexity
-- Always test with small examples first
-- Keep expressions readable and simple
-- Practice combining mapping and filtering
-- List comprehensions are a fundamental Python skill
+## Next Steps
 
-This lab introduces you to one of Python's most powerful and commonly used features! 
+In the next lab, you’ll introduce a `DataReading` class so each reading can hold both text and source (e.g. detector name).
