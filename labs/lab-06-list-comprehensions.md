@@ -135,11 +135,48 @@ print("Word counts of readings containing 'detector':", specific_reading_lengths
 
 ---
 
+## Extensions (Optional)
+
+If you finish the main tasks, try one or more of these. They reuse the same `readings` list and give you more practice with comprehensions.
+
+- **Extension 1: Long readings only**
+  - Build a list of readings that have **more than** 7 words (the opposite of Task 3).
+  - Use the same filtering form; change the condition.
+
+- **Extension 2: Keyword from the user**
+  - Use `input()` to ask for a keyword, then build the "word counts of readings containing this keyword" list using that variable instead of the literal `"detector"`.
+  - Remember case-insensitive matching (e.g. `.lower()`).
+
+- **Extension 3: First word of each reading**
+  - Build a list of the **first word** of each reading (e.g. `"Temperature"`, `"Pressure"`, `"Calibration"`).
+  - Use a mapping comprehension; the expression can use `.split()` and indexing.
+
+**You're done with the extensions when** your script still satisfies the main "You're done when" and you've tried at least one of the ideas above.
+
+<details>
+<summary>Possible approaches for extensions</summary>
+
+- **Long readings:** Same as Task 3 but condition `len(reading.split()) > 7` (or `>= 8`).
+- **Keyword from user:** Store `keyword = input("Keyword? ").strip()` then use `keyword.lower() in reading.lower()` in the condition.
+- **First word:** Expression `reading.split()[0]` (assumes every reading has at least one word).
+
+</details>
+
+---
+
 ## Key Concepts Demonstrated
 
 - **Mapping**: `[expression for item in list]` — build a new list by applying an expression to each item
 - **Filtering**: `[item for item in list if condition]` — keep only items that satisfy the condition
 - **Combining**: `[expression for item in list if condition]` — filter then map in one line
+
+---
+
+## Common Issues
+
+- **SyntaxError or unexpected result** — In a comprehension the order is `[expression for item in list if condition]`. The `if` comes after the `for ... in ...`; the expression is first.
+- **Empty list when you expect matches** — Check that your condition uses the same case as the data (e.g. `keyword.lower() in reading.lower()`).
+- **IndexError when taking first word** — If you use `.split()[0]`, make sure every reading has at least one word, or add a condition to skip empty strings.
 
 ---
 
