@@ -4,4 +4,3 @@ age = int(input("Give me your age: "))
 
 print(age + 1)
 
-print("Hello" == "Hello")

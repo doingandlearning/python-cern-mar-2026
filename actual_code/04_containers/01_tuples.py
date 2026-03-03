@@ -49,4 +49,5 @@ z = particle_location[2]
 
 print(x, y, z)
 
-x, y, z  = particle_location
+x, y, z  = particle_location  # do *you* find it more readable or less?
+

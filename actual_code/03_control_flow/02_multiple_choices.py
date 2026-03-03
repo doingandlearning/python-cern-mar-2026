@@ -6,7 +6,7 @@ elif experiment == "alice":  # elif is a contraction of "else if"
   print("Heavy-ion collisions and quark-gluon plasma.")
 elif experiment == "cms":
   print("Compact Muon Selenoid")
-elif experiment.startswith("lhc") and experiment.find("upgrade") > 0:
+elif experiment.startswith("lhc") and experiment.find("upgrade") > 0: # methods
   print("High-luminosity LHC")
 else:
   print("I don't know that experiment.")

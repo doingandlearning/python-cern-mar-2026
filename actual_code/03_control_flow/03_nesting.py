@@ -8,3 +8,4 @@ if is_sunny:
   else:
     print("Try not to melt!")
   print("It's nice outside!")
+
