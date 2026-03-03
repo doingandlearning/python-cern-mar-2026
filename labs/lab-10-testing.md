@@ -16,6 +16,8 @@ You will:
 
 You have a `DataReading` class (e.g. in `reading_module.py`). You’ll create `test_reading.py` (or `test_reading_module.py`) in the same directory, import the class, and write functions that create objects and use `assert` to check behaviour. Running `pytest` will run all those tests.
 
+**Setup:** If pytest isn’t installed, run `pip install pytest`.
+
 ---
 
 ## Task 1: Create the Test File
@@ -161,6 +163,10 @@ For more detail:
 ```bash
 pytest -v
 ```
+
+---
+
+**You're done when** pytest discovers and runs your tests and they all pass (including at least one edge-case test).
 
 ---
 

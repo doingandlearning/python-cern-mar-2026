@@ -119,6 +119,10 @@ if __name__ == "__main__":
 
 ---
 
+**You're done when** the class lives in `reading_module.py`, `main_analysis.py` imports it and runs the analysis, and the script only runs when executed directly (not when imported).
+
+---
+
 ## Key Concepts Demonstrated
 
 - **Module**: A Python file that can be imported (`import reading_module` or `from reading_module import DataReading`)

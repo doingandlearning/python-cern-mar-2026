@@ -131,6 +131,10 @@ Pick one: discount codes (e.g. SAVE10, FIVER), “undo” last item, or “split
 
 ---
 
+**You're done when** the checkout program runs with a menu, accepts items and quantities, and handles invalid input without crashing (and optionally includes one real-world feature).
+
+---
+
 ## Key Concepts Demonstrated
 
 - **`try...except`**: Catch specific exceptions (e.g. `ValueError`) so the program doesn’t crash

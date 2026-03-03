@@ -13,7 +13,7 @@ You will:
 
 ## Scenario: Data in a File
 
-Your `data.csv` has two columns: `text` and `source` (with a header row). Each following row is one reading. You’ll open the file, skip the header, and for each row create `DataReading(row[0], row[1])` and append it to a list. The rest of your program (analysis, printing) stays the same but works on this list instead of a hard-coded one.
+**Prerequisite:** Your `data.csv` can use the same readings data (text and source) as in Lab 4. The file has two columns: `text` and `source` (with a header row). Each following row is one reading. You’ll open the file, skip the header, and for each row create `DataReading(row[0], row[1])` and append it to a list. The rest of your program (analysis, printing) stays the same but works on this list instead of a hard-coded one.
 
 ---
 
@@ -112,6 +112,10 @@ text,source
 "Temperature spike detected in Sector 7 cooling system",Detector A
 "Pressure nominal in Detector A",Detector A
 ```
+
+---
+
+**You're done when** the program loads readings from `data.csv` into a list of `DataReading` objects and your existing analysis runs on the loaded list.
 
 ---
 

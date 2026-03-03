@@ -151,18 +151,20 @@ else:
 
 ```
 There are 10 readings in the list.
-The average reading length is 5.8 words.
+The average reading length is 6.4 words.
 
-What keyword would you like to search for? detector
+What keyword would you like to search for? run
 
-Readings containing 'detector':
-  • Pressure nominal in Detector A
-  • Anomaly detected in particle count sensor
-  • High voltage supply stable across all channels
-  • Trigger rate above threshold in forward region
+Readings containing 'run':
+  • Calibration run completed for beam line B2
+  • Data acquisition run finished successfully
 
-Found 4 reading(s) containing 'detector'.
+Found 2 reading(s) containing 'run'.
 ```
+
+---
+
+**You're done when** the program prints the number of readings, average word length, and the keyword search results (or "No readings found") when run.
 
 ---
 
@@ -181,6 +183,31 @@ Found 4 reading(s) containing 'detector'.
 - **NameError: name 'readings' is not defined** — Define the list before you use it.
 - **Average is 0 or wrong** — Initialise `total_words = 0` before the loop and add each reading’s word count inside the loop.
 - **Search misses obvious matches** — Use `.lower()` on both the search term and each reading when comparing.
+
+---
+
+## Extensions (Optional)
+
+If you finish the main tasks, try one or more of these extensions. They reuse the same `readings` list but push the ideas a bit further.
+
+- **Extension 1: Multiple keywords**
+  - Let the user enter **two** keywords (e.g. `"temperature"` and `"detector"`).
+  - Show which readings contain **both** keywords, and which contain **at least one**.
+  - Think about how you’ll structure the output so it’s clear.
+
+- **Extension 2: Top N longest readings**
+  - Calculate the word count for each reading.
+  - Print the **top 3 longest** readings and their word counts.
+  - (Hint: you might find sorting helpful, but you don’t have to use it.)
+
+- **Extension 3: Simple summary report**
+  - After the main output, print a short “report” that includes:
+    - total number of readings
+    - average length
+    - number of readings that matched the keyword
+  - Try to make the report easy for a human to scan.
+
+**You’re done with the extensions when** your program still passes the original “You’re done when…” for this lab, and you’ve completed at least one of the extra ideas above.
 
 ---
 

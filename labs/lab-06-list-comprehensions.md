@@ -12,7 +12,7 @@ You will:
 
 ## Scenario: Same Data, New Syntax
 
-You still have the same `readings` list (from Lab 4 or 5). This time you'll build new lists using comprehensions: `[expression for item in list]` for mapping and `[item for item in list if condition]` for filtering. The result is shorter, readable code.
+**Prerequisite:** Same `readings` list as in Lab 4 (or from Lab 5). This time you'll build new lists using comprehensions: `[expression for item in list]` for mapping and `[item for item in list if condition]` for filtering. The result is shorter, readable code.
 
 ---
 
@@ -128,6 +128,10 @@ print("Word counts of readings containing 'detector':", specific_reading_lengths
 ```
 
 </details>
+
+---
+
+**You're done when** the comprehensions produce the expected lists and the script runs without errors.
 
 ---
 

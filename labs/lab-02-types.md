@@ -236,6 +236,10 @@ The type of the value is <class 'int'>
 
 ---
 
+**You're done when** your program prompts for two numbers and prints their sum and the type of the result.
+
+---
+
 ## Key Concepts Demonstrated
 
 - **`input()`**: Get user input (always returns a string)

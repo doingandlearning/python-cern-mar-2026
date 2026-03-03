@@ -13,7 +13,7 @@ You will:
 
 ## Scenario: Reusable Data Analysis
 
-Your list of readings is the same as in Lab 4. This time you'll wrap the logic in functions: one to count words in a string, one to filter by keyword, and one to run the full analysis and print results. This makes the code easier to reuse and test.
+**Prerequisite:** Use the same `readings` list as in Lab 4. This time you'll wrap the logic in functions: one to count words in a string, one to filter by keyword, and one to run the full analysis and print results. This makes the code easier to reuse and test.
 
 ---
 
@@ -150,6 +150,10 @@ if __name__ == "__main__":
 ```
 
 </details>
+
+---
+
+**You're done when** all functions work and running the main script prints the full analysis (count, average, keyword search).
 
 ---
 

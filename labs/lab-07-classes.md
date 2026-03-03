@@ -13,7 +13,7 @@ You will:
 
 ## Scenario: Readings with a Source
 
-Each reading has two pieces of information: the text (e.g. "Temperature spike in Sector 7") and the source (e.g. "Detector A"). A class keeps these together and can provide behaviour (e.g. word count) that uses the object’s own data.
+**Prerequisite:** Use the same readings data (text and source) as in Lab 4 when building your `DataReading` objects. Each reading has two pieces of information: the text (e.g. "Temperature spike in Sector 7") and the source (e.g. "Detector A"). A class keeps these together and can provide behaviour (e.g. word count) that uses the object’s own data.
 
 ---
 
@@ -129,6 +129,10 @@ for r in readings:
 ```
 
 </details>
+
+---
+
+**You're done when** the `DataReading` class has `__init__`, `__str__`, and `get_word_count`, and you can create and print objects (and optionally run analysis on a list of them).
 
 ---
 

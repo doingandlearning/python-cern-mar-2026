@@ -272,6 +272,10 @@ Thanks for playing the Calibration Value Guessing Game!
 
 ---
 
+**You're done when** the guessing game runs, gives high/low/correct feedback, and ends after a correct guess or the maximum number of attempts.
+
+---
+
 ## Key Concepts Demonstrated
 
 - **Loops**: `for attempt in range(n)` for a fixed number of attempts
