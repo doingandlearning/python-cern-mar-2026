@@ -4,13 +4,14 @@
 
 In class you built a **class** (e.g. `ResultValue`) that holds detector name, date, and a list of numeric results, with methods like `add_result`, `get_average_of_results`, `get_maximum_of_results`, and `get_range_of_results`. You don’t need to implement those again here.
 
-In this lab you’ll **use** that class for analysis: create several result objects, add data to each, and produce a short **report** (average, max, range per detector). The focus is on using the class and thinking about how it fits analysis workflows.
+In this lab you’ll **use** that class for analysis: create several result objects, add data to each, and produce a short **report** (average, max, range per detector). You’ll also extend the class with one or two extra analysis methods that are useful for your context.
 
 You will:
 1. Use the `ResultValue` (or similar) class from class and create one object with some results
 2. Create several such objects (different detectors/dates), add results to each, and put them in a list
 3. Loop over the list and print an analysis report (average, max, range for each)
-4. (Optional) Add or improve `__str__` so each object prints nicely in the report
+4. Add at least one extra analysis method that answers a question you care about (e.g. minimum, count above a threshold)
+5. (Optional) Add or improve `__str__` so each object prints nicely in the report
 
 ---
 
@@ -155,9 +156,68 @@ for r in results_list:
 
 </details>
 
+<details>
+<summary>Possible extensions to Task 3</summary>
+
+- Sort the list before printing (e.g. by average or by maximum) to see the “top-performing” detector first.
+- Add units to your printout if your results represent something real (e.g. `events`, `counts`, `°C`).
+
+</details>
+
 ---
 
-## Task 4 (Optional): Add or Improve `__str__`
+## Task 4: Add an Extra Analysis Method
+
+Now that you have basic stats (average, max, range), add at least one **extra analysis method** to the class that answers a question you care about.
+
+**Your task:**
+
+- Pick **one (or more)** of these ideas and add a method for it:
+  - `get_minimum_of_results(self)` — return the minimum value (similar to max).
+  - `count_results_above(self, threshold)` — return how many results are strictly above a given threshold.
+  - `has_anomaly(self, threshold)` — return `True` if any result is above a threshold, otherwise `False`.
+- Update your report loop to use your new method(s) and print the result.
+
+**Hints:**
+
+- For minimum: you can mirror the max implementation but use `min(self.results)`.
+- For counts: start a counter at 0, loop over `self.results`, and increment when the condition is true.
+- For yes/no: you can either loop and return early when you see an anomalous value, or reuse an existing method (e.g. `get_maximum_of_results() > threshold`).
+
+<details>
+<summary>Possible Solution for Task 4</summary>
+
+```python
+def get_minimum_of_results(self):
+    return min(self.results) if self.results else None
+
+def count_results_above(self, threshold):
+    count = 0
+    for value in self.results:
+        if value > threshold:
+            count += 1
+    return count
+```
+
+In your report loop you might do:
+
+```python
+for r in results_list:
+    avg = r.get_average_of_results()
+    mx = r.get_maximum_of_results()
+    rng = r.get_range_of_results()
+    above = r.count_results_above(200)  # example threshold
+    if avg is not None:
+        print(f"{r.detector_name} ({r.date}): avg={avg}, max={mx}, range={rng}, >200={above}")
+    else:
+        print(f"{r.detector_name} ({r.date}): no data")
+```
+
+</details>
+
+---
+
+## Task 5 (Optional): Add or Improve `__str__`
 
 If your class doesn’t have a `__str__` method yet, add one so that `print(r)` shows a useful one-line summary (e.g. detector name, date, and maybe count of results or average). Then in your report loop you can use `print(r)` or combine `str(r)` with the stats.
 
@@ -179,15 +239,15 @@ Then in the loop you might do: `print(r, "->", r.get_average_of_results(), r.get
 
 ---
 
-**You're done when** you have a script that creates multiple result objects, adds results to each, and prints an analysis report (average, max, range per object).
+**You're done when** you have a script that creates multiple result objects, adds results to each, prints an analysis report (average, max, range per object), and uses at least one extra analysis method of your own (e.g. minimum or count-above-threshold).
 
 ---
 
 ## Key Concepts Demonstrated
 
 - **Using a class**: Creating instances and calling methods instead of reaching into dicts
-- **Encapsulation**: Data (detector name, date, results list) and analysis (average, max, range) live together
-- **Collections of objects**: A list of result objects lets you run the same analysis over many detectors or dates
+- **Encapsulation**: Data (detector name, date, results list) and analysis (average, max, range, your extra methods) live together
+- **Collections of objects**: A list of result objects lets you run the same analysis over many detectors or dates (and apply new analysis methods consistently)
 
 ---
 
