@@ -106,6 +106,32 @@ After parsing, check that values make sense.
 - Check `if choice_num < 1 or choice_num > 5:` and similar for quantity
 - Handle “item not found” (e.g. no item with that id) and `continue`
 
+<details>
+<summary>Possible pattern for Task 3</summary>
+
+```python
+try:
+    choice_num = int(choice)
+except ValueError:
+    print("Please enter a number 1-5 or 'done'.")
+    continue
+if choice_num < 1 or choice_num > 5:
+    print("Please choose a number between 1 and 5.")
+    continue
+# ... find chosen_item ...
+qty_text = input("Quantity? ").strip()
+try:
+    qty = int(qty_text)
+except ValueError:
+    print("Please enter a whole number.")
+    continue
+if qty < 1:
+    print("Quantity must be at least 1.")
+    continue
+```
+
+</details>
+
 ---
 
 ## Task 4: Produce a Receipt
@@ -123,11 +149,36 @@ Store each purchase (item name, unit price, quantity, line total) in a list and 
 - Append after you’ve computed the line total
 - Format with f-strings and e.g. `£{line_total:.2f}`
 
+<details>
+<summary>Possible pattern for Task 4</summary>
+
+```python
+purchases = []  # at start of script or loop
+# After computing line_total for a valid choice and quantity:
+purchases.append({"name": chosen_item["name"], "qty": qty, "line_total": line_total})
+# When user types "done":
+print("\nReceipt:")
+for p in purchases:
+    print(f"  {p['name']} x{p['qty']} = £{p['line_total']:.2f}")
+print(f"Total: £{total:.2f}")
+```
+
+</details>
+
 ---
 
 ## Task 5: Add One “Real World” Feature (Optional)
 
 Pick one: discount codes (e.g. SAVE10, FIVER), “undo” last item, or “split bill” (ask how many people, print per-person cost). Handle invalid input gracefully.
+
+<details>
+<summary>Possible approaches for Task 5</summary>
+
+- **Discount code:** After printing the total, ask for a code; if it matches (e.g. `SAVE10`), multiply total by 0.9 and print the new total. Use `try`/`except` only if you ask for a number elsewhere.
+- **Undo:** Keep the last purchase in a variable; if the user types `undo` at the item prompt (instead of a number or `done`), remove the last item from `purchases` and subtract its line total. Re-prompt.
+- **Split bill:** After the receipt, ask "Split how many ways?"; use `try`/`except` for `int()` and check `>= 1`, then print `Total per person: £{total/n:.2f}`.
+
+</details>
 
 ---
 
@@ -144,6 +195,15 @@ Pick one: discount codes (e.g. SAVE10, FIVER), “undo” last item, or “split
 
 ---
 
+## Common Issues
+
+- **Program still crashes on bad input** — Make sure every `int(...)` that uses user input is inside a `try` block with `except ValueError:` and that you `continue` (or re-prompt) so the loop doesn't use an invalid value.
+- **Catching too much** — Use `except ValueError:` (or another specific exception) rather than `except Exception:` so you don't hide bugs like typos.
+- **Wrong indentation** — The code that might raise (e.g. `int(choice)`) must be inside the `try` block; the message and `continue` must be inside the `except` block.
+- **Menu choice 1–5** — After parsing the number, check the range and `continue` before you look up the item; otherwise an out-of-range number can cause an error when finding the chosen item.
+
+---
+
 ## Next Steps
 
-In the next lab, you’ll write automated tests for your `DataReading` class using pytest.
+In the next lab, you’ll write automated tests for your analysis class (e.g. `ResultValue`) using pytest.
