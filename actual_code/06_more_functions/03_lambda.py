@@ -4,7 +4,10 @@ def add(a,b):
 add(1,2)
 
 def get_price_from_product(product):
-  return product[1]
+  """
+  returns a tuple of price and stock
+  """
+  return product[1], product[4]
 
 # lambda -> anonymous functions -> callable -> arrow functions
 # small, throw-away functions
@@ -29,6 +32,16 @@ most_expensive = max(products, key=lambda p: p[1])
 print(most_expensive)
 
 most_stock = max(products, key=lambda p: p[3]) 
+
+max_value = products[0] 
+for product in products:
+  if get_price_from_product(product) > get_price_from_product(max_value):
+    max_value = product
+
+print(max_value)
+
+
+
 print(most_stock)
 
 print("=" * 22)

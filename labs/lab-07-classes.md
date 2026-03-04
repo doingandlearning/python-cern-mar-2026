@@ -1,151 +1,203 @@
 # Lab 7: Structuring Data with Classes
 
 ## Objective
-So far you've worked with readings as plain strings. As data gets more complex, it helps to group related data and behaviour. **Classes** let you define a type that holds both the text of a reading and its source (e.g. detector name, sensor ID), plus methods like word count.
+
+In class you built a **class** (e.g. `ResultValue`) that holds detector name, date, and a list of numeric results, with methods like `add_result`, `get_average_of_results`, `get_maximum_of_results`, and `get_range_of_results`. You don’t need to implement those again here.
+
+In this lab you’ll **use** that class for analysis: create several result objects, add data to each, and produce a short **report** (average, max, range per detector). The focus is on using the class and thinking about how it fits analysis workflows.
 
 You will:
-1. Define a `DataReading` class with `__init__(self, text, source)`
-2. Add a `__str__` method for readable output
-3. Add a `get_word_count()` method
-4. (Optional) Build a list of `DataReading` objects and process them
+1. Use the `ResultValue` (or similar) class from class and create one object with some results
+2. Create several such objects (different detectors/dates), add results to each, and put them in a list
+3. Loop over the list and print an analysis report (average, max, range for each)
+4. (Optional) Add or improve `__str__` so each object prints nicely in the report
 
 ---
 
-## Scenario: Readings with a Source
+## Scenario: Analysis Report from Result Objects
 
-**Prerequisite:** Use the same readings data (text and source) as in Lab 4 when building your `DataReading` objects. Each reading has two pieces of information: the text (e.g. "Temperature spike in Sector 7") and the source (e.g. "Detector A"). A class keeps these together and can provide behaviour (e.g. word count) that uses the object’s own data.
+**Prerequisite:** You have a class from the lesson that holds detector name, date, and a list of results, with methods to add a result and to compute average, maximum, and range. Here you’ll use it to build a small “analysis report”: multiple detectors (or multiple dates), each with its own list of values, and you’ll print the key stats for each.
 
 ---
 
-## Task 1: Define the `DataReading` Class
+## Starter: The Class from Class
 
-Create a file `reading_objects.py` (or similar).
+If you saved the class from the lesson, use it. If not, you can use the following so you can do the lab without re-implementing the methods.
+
+<details>
+<summary>Starter: ResultValue class (use this if you don't have the class from class)</summary>
+
+```python
+class ResultValue:
+    def __init__(self, detector_name, date):
+        self.detector_name = detector_name
+        self.date = date
+        self.results = []
+
+    def add_result(self, value):
+        self.results.append(value)
+
+    def get_average_of_results(self):
+        if not self.results:
+            return None
+        return sum(self.results) / len(self.results)
+
+    def get_maximum_of_results(self):
+        return max(self.results) if self.results else None
+
+    def get_range_of_results(self):
+        if not self.results:
+            return None
+        return max(self.results) - min(self.results)
+```
+
+</details>
+
+---
+
+## Task 1: One Object and Its Stats
+
+Create a file `result_analysis.py` (or similar).
 
 **Your task:**
 
-- Define a class named `DataReading`
-- Add an `__init__(self, text, source)` method that stores `text` and `source` as attributes on the object (`self.text`, `self.source`)
-- Create at least one object to test: e.g. `DataReading("Temperature spike in Sector 7", "Detector A")`
+- Use the `ResultValue` class (from class or from the starter above)
+- Create one object (e.g. detector name `"Detector A"`, date `"2026-03-03"`)
+- Call `add_result(...)` several times with different numbers
+- Print the average, maximum, and range by calling `get_average_of_results()`, `get_maximum_of_results()`, and `get_range_of_results()`
 
 **Hints:**
 
-- Start with `class DataReading:` and indent the method
-- In `__init__`, assign `self.text = text` and `self.source = source`
+- Create the object, then call `obj.add_result(100)`, `obj.add_result(200)`, etc.
+- Use the methods to get the values and `print()` them
 
 <details>
 <summary>Possible Solution for Task 1</summary>
 
 ```python
-class DataReading:
-    def __init__(self, text, source):
-        self.text = text
-        self.source = source
-
-r = DataReading("Temperature spike detected in Sector 7 cooling system", "Detector A")
+result = ResultValue("Detector A", "2026-03-03")
+result.add_result(123)
+result.add_result(123)
+result.add_result(414)
+print("Average:", result.get_average_of_results())
+print("Max:", result.get_maximum_of_results())
+print("Range:", result.get_range_of_results())
 ```
 
 </details>
 
 ---
 
-## Task 2: Add a String Representation
+## Task 2: Several Objects in a List
 
-Add a `__str__` method so that `print(r)` shows something readable instead of a default object address.
+Create multiple result objects (different detector names and/or dates), add different numeric results to each, and put the objects in a list.
 
 **Your task:**
 
-- Inside the class, define `def __str__(self):` that returns a string (e.g. the text and source combined)
-- Use `return` with an f-string or concatenation
-- Call `print(r)` to verify the output
+- Create at least 2–3 `ResultValue` objects (e.g. different detectors or different dates)
+- For each, call `add_result(...)` with a few values (they can be realistic measurements or simple numbers)
+- Put all the objects in one list (e.g. `results_list`)
 
 **Hints:**
 
-- The method must return a string
-- e.g. `return f"{self.text} ({self.source})"`
+- Build the list by appending each object after you’ve added its results
+- You can use the same detector name with different dates, or different detector names
 
 <details>
 <summary>Possible Solution for Task 2</summary>
 
 ```python
-def __str__(self):
-    return f"{self.text} ({self.source})"
+r1 = ResultValue("Detector A", "2026-03-03")
+r1.add_result(123)
+r1.add_result(123)
+r1.add_result(414)
+
+r2 = ResultValue("Detector B", "2026-03-03")
+r2.add_result(12)
+r2.add_result(12)
+r2.add_result(12)
+
+results_list = [r1, r2]
 ```
 
 </details>
 
 ---
 
-## Task 3: Add a `get_word_count` Method
+## Task 3: Print an Analysis Report
 
-Add a method that returns the number of words in the reading’s text.
+Loop over the list of result objects and, for each one, print a short line of analysis: detector name, date, average, max, and range.
 
 **Your task:**
 
-- Define `def get_word_count(self):` inside the class
-- Use `self.text` and the same logic as before (e.g. `len(self.text.split())`)
-- Return the integer count
-- Test with e.g. `print(r.get_word_count())`
+- Loop over the list you built in Task 2
+- For each object, call its methods and print something like:  
+  `Detector A (2026-03-03): avg=220.0, max=414, range=291`
+- Handle the case where a result list might be empty (e.g. print `"no data"` or skip)
 
 **Hints:**
 
-- Methods that use the object’s data take `self` and use `self.text`
+- Use a `for` loop; for each item call `get_average_of_results()`, `get_maximum_of_results()`, `get_range_of_results()` and format the output
 
 <details>
 <summary>Possible Solution for Task 3</summary>
 
 ```python
-def get_word_count(self):
-    return len(self.text.split())
+for r in results_list:
+    avg = r.get_average_of_results()
+    mx = r.get_maximum_of_results()
+    rng = r.get_range_of_results()
+    if avg is not None:
+        print(f"{r.detector_name} ({r.date}): avg={avg}, max={mx}, range={rng}")
+    else:
+        print(f"{r.detector_name} ({r.date}): no data")
 ```
 
 </details>
 
 ---
 
-## Task 4: Use a List of `DataReading` Objects (Optional)
+## Task 4 (Optional): Add or Improve `__str__`
 
-Replace a list of strings with a list of `DataReading` objects and loop over them.
-
-**Your task:**
-
-- Build a list of several `DataReading` objects (each with text and source)
-- Loop over the list and, for each object, print its text (or `str` representation) and its word count using `.get_word_count()`
+If your class doesn’t have a `__str__` method yet, add one so that `print(r)` shows a useful one-line summary (e.g. detector name, date, and maybe count of results or average). Then in your report loop you can use `print(r)` or combine `str(r)` with the stats.
 
 **Hints:**
 
-- Each list element is a `DataReading` instance; call methods on it
-- You can use the same reading strings and sources as in earlier labs
+- Define `def __str__(self):` inside the class and `return` a string using `self.detector_name`, `self.date`, and optionally `len(self.results)` or `get_average_of_results()`
 
 <details>
-<summary>Possible Solution for Task 4</summary>
+<summary>Possible approach for Task 4</summary>
 
 ```python
-readings = [
-    DataReading("Temperature spike detected in Sector 7 cooling system", "Detector A"),
-    DataReading("Pressure nominal in Detector A", "Detector A"),
-]
-for r in readings:
-    print(r, "->", r.get_word_count(), "words")
+def __str__(self):
+    return f"{self.detector_name} ({self.date}): {len(self.results)} results"
 ```
+
+Then in the loop you might do: `print(r, "->", r.get_average_of_results(), r.get_maximum_of_results(), r.get_range_of_results())`.
 
 </details>
 
 ---
 
-**You're done when** the `DataReading` class has `__init__`, `__str__`, and `get_word_count`, and you can create and print objects (and optionally run analysis on a list of them).
+**You're done when** you have a script that creates multiple result objects, adds results to each, and prints an analysis report (average, max, range per object).
 
 ---
 
 ## Key Concepts Demonstrated
 
-- **Class**: Blueprint for objects with attributes and methods
-- **`__init__`**: Constructor that runs when you create an instance
-- **`self`**: Refers to the instance; used to store and access attributes
-- **`__str__`**: Special method used by `print()` for a readable string
-- **Methods**: Functions defined on the class that take `self` and use instance data
+- **Using a class**: Creating instances and calling methods instead of reaching into dicts
+- **Encapsulation**: Data (detector name, date, results list) and analysis (average, max, range) live together
+- **Collections of objects**: A list of result objects lets you run the same analysis over many detectors or dates
+
+---
+
+## Common Issues
+
+- **AttributeError or empty stats** — If you never call `add_result`, the results list is empty; your get_* methods should handle that (e.g. return `None`) and your report loop should check before printing.
+- **Class not defined** — Use the starter class in the collapsible section above if you don’t have the one from class.
 
 ---
 
 ## Next Steps
 
-In the next lab, you’ll move the `DataReading` class into its own module and import it from a main script.
+In the next lab, you’ll move your class into its own module and import it from a main script. We’ll also introduce a small class for text-based readings when we load data from files.
