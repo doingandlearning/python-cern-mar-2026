@@ -1,5 +1,5 @@
-# Lab 9: Fault-Tolerant Checkout - Complete Solution
-# Handles invalid input with try/except, validates ranges, produces a receipt.
+# Lab 9: Fault-Tolerant Checkout - Solution
+# Matches lab-09-error-handling.md: menu, try/except, range validation, receipt.
 
 items = [
     {"id": 1, "name": "Coffee",   "price": 3.50},
@@ -9,73 +9,76 @@ items = [
     {"id": 5, "name": "Fruit",    "price": 1.10},
 ]
 
-total = 0.0
-purchases = []
 
-print("Welcome to the Fault-Tolerant Checkout")
-print("Type 'done' at the item prompt to finish.\n")
+def main():
+    total = 0.0
+    purchases = []
 
-while True:
-    print("Menu:")
-    for item in items:
-        print(f"  {item['id']}. {item['name']} (£{item['price']:.2f})")
+    print("Welcome to the Fault-Tolerant Checkout")
+    print("Type 'done' at the item prompt to finish.\n")
 
-    choice = input("\nChoose an item number (1-5) or type 'done': ").strip().lower()
-    if choice == "done":
-        break
+    while True:
+        print("Menu:")
+        for item in items:
+            print(f"  {item['id']}. {item['name']} (£{item['price']:.2f})")
 
-    try:
-        choice_num = int(choice)
-    except ValueError:
-        print("Please enter a number 1-5 or 'done'. Try again.\n")
-        continue
-
-    if choice_num < 1 or choice_num > 5:
-        print("Please choose 1-5 from the menu.\n")
-        continue
-
-    chosen_item = None
-    for item in items:
-        if item["id"] == choice_num:
-            chosen_item = item
+        choice = input("\nChoose an item number (1-5) or type 'done': ").strip().lower()
+        if choice == "done":
             break
 
-    if chosen_item is None:
-        print("Please choose 1-5 from the menu.\n")
-        continue
+        try:
+            choice_num = int(choice)
+        except ValueError:
+            print("Please enter a number 1-5 or 'done'. Try again.\n")
+            continue
 
-    qty_text = input(f"How many {chosen_item['name']}? ").strip()
+        if choice_num < 1 or choice_num > 5:
+            print("Please choose a number between 1 and 5.\n")
+            continue
 
-    try:
-        quantity = int(qty_text)
-    except ValueError:
-        print("Quantity must be a whole number. Try again.\n")
-        continue
+        chosen_item = None
+        for item in items:
+            if item["id"] == choice_num:
+                chosen_item = item
+                break
 
-    if quantity < 1:
-        print("Quantity must be at least 1. Try again.\n")
-        continue
+        if chosen_item is None:
+            print("Please choose 1-5 from the menu.\n")
+            continue
 
-    if quantity > 20:
-        print("Maximum quantity is 20. Try again.\n")
-        continue
+        qty_text = input(f"How many {chosen_item['name']}? ").strip()
 
-    line_total = chosen_item["price"] * quantity
-    total += line_total
+        try:
+            qty = int(qty_text)
+        except ValueError:
+            print("Please enter a whole number. Try again.\n")
+            continue
 
-    purchases.append({
-        "name": chosen_item["name"],
-        "unit_price": chosen_item["price"],
-        "quantity": quantity,
-        "line_total": line_total,
-    })
+        if qty < 1:
+            print("Quantity must be at least 1. Try again.\n")
+            continue
 
-    print(f"Added: {chosen_item['name']} x{quantity} = £{line_total:.2f}")
-    print(f"Running total: £{total:.2f}\n")
+        if qty > 20:
+            print("Maximum quantity is 20. Try again.\n")
+            continue
 
-print("\nReceipt")
-print("-" * 40)
-for p in purchases:
-    print(f"{p['name']} x{p['quantity']} @ £{p['unit_price']:.2f} = £{p['line_total']:.2f}")
-print("-" * 40)
-print(f"Total: £{total:.2f}")
+        line_total = chosen_item["price"] * qty
+        total += line_total
+
+        purchases.append({
+            "name": chosen_item["name"],
+            "qty": qty,
+            "line_total": line_total,
+        })
+
+        print(f"Added: {chosen_item['name']} x{qty} = £{line_total:.2f}")
+        print(f"Running total: £{total:.2f}\n")
+
+    print("\nReceipt:")
+    for p in purchases:
+        print(f"  {p['name']} x{p['qty']} = £{p['line_total']:.2f}")
+    print(f"Total: £{total:.2f}")
+
+
+if __name__ == "__main__":
+    main()
