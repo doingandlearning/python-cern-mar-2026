@@ -29,6 +29,9 @@ class ResultValue:
   def __str__(self):
     return f"<ResultValue for detector '{self.detector_name}' on {self.date_of_results}>"
 
+  def __repr__(self):
+    return f"ResultValue('{self.detector_name}', '{self.date_of_results}')"
+
   def __len__(self):
     return len(self.results)
 
@@ -67,3 +70,18 @@ print(result.get_maximum_of_results())
 
 print(len(result))
 print(len(result.results))
+
+
+class ExperimentResults(ResultValue):
+  def say_name(self):
+    print(self.detector_name)
+
+new_result = ExperimentResults("New Detector", "2026-01-01")
+
+new_result.say_name()
+print(new_result.results)
+
+
+
+
+print([result, result_two]) # printing a list -> print -> __repr__
