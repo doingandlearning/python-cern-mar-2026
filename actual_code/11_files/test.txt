@@ -1,0 +1,5 @@
+Phone
+Microphone
+Tissues
+Cup
+Laptop
