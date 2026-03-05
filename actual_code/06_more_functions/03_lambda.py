@@ -9,6 +9,10 @@ def get_price_from_product(product):
   """
   return product[1], product[4]
 
+test = (1,2,3,4,5,6,7)
+first, *rest = test
+
+
 # lambda -> anonymous functions -> callable -> arrow functions
 # small, throw-away functions
 

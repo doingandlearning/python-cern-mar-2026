@@ -44,3 +44,5 @@ prices_with_tax = []
 for product in products:
   prices_with_tax.append(calculate_with_tax(product[0], 0.2))
 
+#  A -> B  mapping
+

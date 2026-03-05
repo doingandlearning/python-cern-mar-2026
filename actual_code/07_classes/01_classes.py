@@ -13,3 +13,8 @@ print(number.as_integer_ratio())
 print(type(1.1))
 print(type("1"))
 print(type(True))
+
+empty_list = []
+
+# append(empty_list, 3)
+empty_list.append(3)

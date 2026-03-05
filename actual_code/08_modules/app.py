@@ -1,6 +1,7 @@
 import cern.utils as ut
 from cern.utils import Shape as S, triangle, add
-
+from cern.user_functions import find_user_by_email
+from cern import find_user_by_email
 
 # import numpy as np
 # import pandas as pd

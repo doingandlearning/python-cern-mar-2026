@@ -5,7 +5,7 @@
   # ValueError: invalid literal for int() with base 10: 'this is not a number'
 
 # 2. Where it went wrong
-  # Traceback
+  # Traceback - traceback.format_exc()
 
 # 3. If it was expected, what should we do?
   # - Ask the user to give me a different value
@@ -13,7 +13,7 @@
   # - Stop!
   # - Give the user a readable message, save/store/log the actual error
 
-# 4. If it wasn't expected, what should we do?
+# 4. If it wasn't expected, what should we do?  # except Exception:
   # - Stop!
   # - Report the issue and then keep going
 
@@ -21,3 +21,4 @@
 
 
 user_age = int(input("What is your age? "))
+

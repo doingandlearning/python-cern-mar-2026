@@ -37,3 +37,9 @@ for key, value in result_dict.items():
 
 result_dict.get("results", []).append(432)
 print(result_dict)
+
+detector_two = {
+
+}
+
+# class 

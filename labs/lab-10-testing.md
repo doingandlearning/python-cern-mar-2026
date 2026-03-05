@@ -1,20 +1,21 @@
-# Lab 10: Testing the DataReading Class with pytest
+# Lab 10: Testing Your Analysis Class with pytest
 
 ## Objective
-Write automated tests for the `DataReading` class using `pytest`. You are **not** changing the class — only writing tests that check it behaves as expected. This locks in behaviour and catches regressions when you change code later.
+
+Write automated tests for your **result-analysis class** (e.g. `ResultValue` from Labs 7–8) using `pytest`. You are **not** changing the class here — only writing tests that check it behaves as expected. This locks in behaviour and catches regressions when you change code later.
 
 You will:
-1. Create a test file and import `DataReading`
-2. Test that object creation stores `text` and `source`
-3. Test `get_word_count()` with clear cases
-4. Add at least one edge-case test (e.g. empty string)
+1. Create a test file and import your class from `results_module`
+2. Test that object creation stores detector name and date
+3. Test analysis methods like `get_average_of_results`, `get_maximum_of_results`, and `get_range_of_results`
+4. Add at least one edge-case test (e.g. no results yet)
 5. (Optional) Reduce duplication with a helper or `@pytest.mark.parametrize`
 
 ---
 
 ## Scenario: Testing Without Changing the Class
 
-You have a `DataReading` class (e.g. in `reading_module.py`). You’ll create `test_reading.py` (or `test_reading_module.py`) in the same directory, import the class, and write functions that create objects and use `assert` to check behaviour. Running `pytest` will run all those tests.
+You have a class (e.g. `ResultValue` in `results_module.py`) that holds detector name, date, and a list of numeric results, with methods to add a result and compute average, maximum, range, and any extra analysis you added in Lab 7. Here you’ll write tests that create objects, call those methods, and use `assert` to check behaviour. Running `pytest` will run all those tests.
 
 **Setup:** If pytest isn’t installed, run `pip install pytest`.
 
@@ -24,8 +25,8 @@ You have a `DataReading` class (e.g. in `reading_module.py`). You’ll create `t
 
 **Your task:**
 
-- Create a new file named `test_reading.py` (or `test_reading_module.py`) next to `reading_module.py`
-- At the top, import the class: `from reading_module import DataReading`
+- Create a new file named `test_results.py` next to `results_module.py`
+- At the top, import the class: `from results_module import ResultValue` (or whatever you named it)
 - Run `pytest` and confirm it discovers the file (you can have no tests at first, or one dummy test)
 
 **Hints:**
@@ -37,9 +38,9 @@ You have a `DataReading` class (e.g. in `reading_module.py`). You’ll create `t
 <summary>Possible setup</summary>
 
 ```python
-# test_reading.py
+# test_results.py
 import pytest
-from reading_module import DataReading
+from results_module import ResultValue
 ```
 
 </details>
@@ -50,47 +51,61 @@ from reading_module import DataReading
 
 **Your task:**
 
-- Write a test function that creates a `DataReading` with known text and source
-- Use `assert` to check that `r.text` and `r.source` match what you passed in
+- Write a test function that creates a `ResultValue` with a known detector name and date
+- Use `assert` to check that the attributes on the object match what you passed in (and that `results` starts empty)
 
 **Hints:**
 
-- Function name: e.g. `def test_reading_stores_text_and_source():`
-- Use simple values, e.g. `DataReading("One two three", "Detector A")`
+- Function name: e.g. `def test_result_stores_name_date_and_starts_empty():`
+- Use simple values, e.g. `ResultValue("Detector A", "2026-03-03")`
 
 <details>
 <summary>Possible Solution for Task 2</summary>
 
 ```python
-def test_reading_stores_text_and_source():
-    r = DataReading("Temperature nominal", "Detector A")
-    assert r.text == "Temperature nominal"
-    assert r.source == "Detector A"
+def test_result_stores_name_date_and_starts_empty():
+    r = ResultValue("Detector A", "2026-03-03")
+    assert r.detector_name == "Detector A"
+    assert r.date == "2026-03-03"
+    assert r.results == []
 ```
 
 </details>
 
 ---
 
-## Task 3: Test `get_word_count`
+## Task 3: Test `add_result` and Basic Stats
 
 **Your task:**
 
-- Write a test that creates a `DataReading` with text where the word count is obvious (e.g. "One two three" → 3)
-- Call `r.get_word_count()` and assert the result equals the expected number
+- Write a test that:
+  - creates a `ResultValue`
+  - calls `add_result(...)` a few times with known numbers
+  - asserts that:
+    - `results` contains those numbers
+    - `get_average_of_results()` returns the expected average
+    - `get_maximum_of_results()` returns the expected max
+    - `get_range_of_results()` returns the expected range (max − min)
 
 **Hints:**
 
-- One clear test is enough to start
-- Choose text you can count by hand
+- Choose small, easy-to-check numbers (e.g. 10, 20, 30 → avg 20, max 30, range 20)
+- Call the methods and compare with the values you would compute by hand
 
 <details>
 <summary>Possible Solution for Task 3</summary>
 
 ```python
-def test_get_word_count_counts_words():
-    r = DataReading("One two three", "Detector A")
-    assert r.get_word_count() == 3
+def test_basic_stats_after_adding_results():
+    r = ResultValue("Detector A", "2026-03-03")
+    r.add_result(10)
+    r.add_result(20)
+    r.add_result(30)
+
+    assert r.results == [10, 20, 30]
+    assert r.get_average_of_results() == 20
+    assert r.get_maximum_of_results() == 30
+    assert r.get_range_of_results() == 20
 ```
 
 </details>
@@ -101,21 +116,26 @@ def test_get_word_count_counts_words():
 
 **Your task:**
 
-- Pick one edge case (e.g. empty string `""`, single word, or multiple spaces) and decide what the method *should* return
-- Write a test that asserts that behaviour
+- Pick one or more edge cases and decide what the methods *should* return, for example:
+  - A new object with no results yet
+  - A single result only
+  - All results equal (e.g. [5, 5, 5])
+- Write tests that assert that behaviour (e.g. `get_average_of_results()` returns `None` or a specific value when there are no results, depending on how you wrote the class)
 
 **Hints:**
 
-- Empty string: `len("".split())` is 0 in Python — so you might assert `get_word_count()` returns 0 for `DataReading("", "X")`
-- Document the decision in a short comment if it’s not obvious
+- If your implementation returns `None` for empty `results`, assert exactly that
+- For a single result `[42]`, you might expect average 42, max 42, range 0
 
 <details>
 <summary>Possible Solution for Task 4</summary>
 
 ```python
-def test_get_word_count_empty_string_is_zero():
-    r = DataReading("", "Detector A")
-    assert r.get_word_count() == 0
+def test_stats_on_empty_results_are_none():
+    r = ResultValue("Detector A", "2026-03-03")
+    assert r.get_average_of_results() is None
+    assert r.get_maximum_of_results() is None
+    assert r.get_range_of_results() is None
 ```
 
 </details>
@@ -126,26 +146,40 @@ def test_get_word_count_empty_string_is_zero():
 
 **Your task:**
 
-- Either: introduce a small helper that creates a `DataReading` and use it in two or more tests, or
-- Use `@pytest.mark.parametrize` to run one test function with several (text, expected_count) pairs
+- Either: introduce a small helper that creates a `ResultValue` and use it in two or more tests, or
+- Use `@pytest.mark.parametrize` to run one test function with several (list_of_results, expected_average, expected_max, expected_range) cases
 
 **Hints:**
 
-- Parametrize example: `@pytest.mark.parametrize("text,expected", [("One", 1), ("One two", 2), ("", 0)])` then `def test_get_word_count_cases(text, expected): ... assert DataReading(text, "X").get_word_count() == expected`
+- A helper might look like:
+
+  ```python
+  def make_result(values):
+      r = ResultValue("Detector A", "2026-03-03")
+      for v in values:
+          r.add_result(v)
+      return r
+  ```
+
+- A parametrized test could pass different lists and expected stats
 
 <details>
 <summary>Possible parametrized test</summary>
 
 ```python
-@pytest.mark.parametrize("text, expected", [
-    ("One", 1),
-    ("One two", 2),
-    ("One two three", 3),
-    ("", 0),
+@pytest.mark.parametrize("values, avg, mx, rng", [
+    ([10], 10, 10, 0),
+    ([1, 2, 3], 2, 3, 2),
+    ([5, 5, 5], 5, 5, 0),
 ])
-def test_get_word_count_cases(text, expected):
-    r = DataReading(text, "Detector A")
-    assert r.get_word_count() == expected
+def test_stats_for_various_sets_of_results(values, avg, mx, rng):
+    r = ResultValue("Detector A", "2026-03-03")
+    for v in values:
+        r.add_result(v)
+
+    assert r.get_average_of_results() == avg
+    assert r.get_maximum_of_results() == mx
+    assert r.get_range_of_results() == rng
 ```
 
 </details>
@@ -166,18 +200,20 @@ pytest -v
 
 ---
 
-**You're done when** pytest discovers and runs your tests and they all pass (including at least one edge-case test).
+**You're done when** pytest discovers and runs your tests and they all pass (including at least one edge-case test and at least one test that checks one of your analysis methods).
 
 ---
 
 ## Key Concepts Demonstrated
 
-- **Test**: A function that uses `assert` to check one behaviour
+- **Test**: A function that uses `assert` to check one behaviour of the class
 - **pytest**: Discovers and runs functions whose names start with `test_`
-- **Edge cases**: Tests for empty input, single item, etc., document and protect behaviour
+- **Edge cases**: Tests for empty results, single result, all-equal lists, etc., document and protect behaviour
+- **Regression safety**: Once tests pass, you can change the implementation of `ResultValue` later and re-run tests to ensure behaviour stays consistent
 
 ---
 
 ## Next Steps
 
-In the next lab, you’ll load readings from a CSV file instead of hard-coding them in the script.
+In the next lab, you’ll load data from a CSV file instead of hard-coding it in the script, and you can later combine that with your analysis class for end‑to‑end testing.
+
