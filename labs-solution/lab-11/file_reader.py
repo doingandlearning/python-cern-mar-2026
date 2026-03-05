@@ -1,128 +1,81 @@
-# Lab 11: Reading Data From a File - Complete Solution
-# This script reads readings from data.csv instead of using hard-coded data
+"""Lab 11: Loading Measurements from a CSV File - Complete Solution.
+
+This script loads detector measurements from data.csv into ResultValue objects
+using csv.DictReader, then prints a summary report using the analysis methods.
+"""
 
 import csv
-from reading_module import DataReading
+
+from results_module import ResultValue
 
 
-def load_readings_from_csv(filename):
-    """
-    Load readings from a CSV file and return a list of DataReading objects.
-
-    Args:
-        filename (str): The name of the CSV file to read (e.g. data.csv)
-
-    Returns:
-        list: List of DataReading objects created from the CSV data
-    """
-    readings = []
+def load_results_from_csv(filename):
+    """Load results from CSV and return a dict of (detector_name, date) -> ResultValue."""
+    results_by_key = {}
 
     try:
         with open(filename, mode="r", newline="", encoding="utf-8") as csv_file:
-            csv_reader = csv.reader(csv_file)
-            next(csv_reader)  # skip header
+            reader = csv.DictReader(csv_file)
+            for row in reader:
+                detector_name = row.get("detector_name")
+                date_str = row.get("date")
+                value_str = row.get("value")
+                if detector_name is None or date_str is None or value_str is None:
+                    continue
+                try:
+                    value = float(value_str)
+                except ValueError:
+                    continue
 
-            for row in csv_reader:
-                if len(row) >= 2:
-                    text, source = row[0], row[1]
-                    readings.append(DataReading(text, source))
-
-        print(f"Successfully loaded {len(readings)} readings from {filename}")
+                key = (detector_name, date_str)
+                if key not in results_by_key:
+                    results_by_key[key] = ResultValue(detector_name, date_str)
+                results_by_key[key].add_result(value)
 
     except FileNotFoundError:
         print(f"Error: File '{filename}' not found. Make sure it's in the same directory.")
-        return []
+        return {}
     except Exception as e:
         print(f"Error reading file: {e}")
-        return []
+        return {}
 
-    return readings
+    return results_by_key
 
 
-def analyze_readings(readings):
-    """Analyze the loaded readings and display statistics."""
-    if not readings:
-        print("No readings to analyze.")
+def print_summary(results_by_key):
+    """Print a summary report for all ResultValue objects."""
+    if not results_by_key:
+        print("No results to analyze.")
         return
 
     print("\n" + "=" * 60)
-    print("DATA READINGS ANALYSIS")
+    print("DETECTOR RESULTS ANALYSIS")
     print("=" * 60)
 
-    print("All readings:")
-    print("-" * 40)
-    for i, r in enumerate(readings, 1):
-        print(f"{i:2}. ({r.get_word_count():2} words) [{r.source}] {r.text}")
-
-    total = len(readings)
-    total_words = sum(r.get_word_count() for r in readings)
-    average = total_words / total if total > 0 else 0
-
-    print(f"\nStatistics:")
-    print(f"  Total readings: {total}")
-    print(f"  Total words: {total_words}")
-    print(f"  Average words per reading: {average:.1f}")
-
-    if readings:
-        shortest = min(readings, key=lambda r: r.get_word_count())
-        longest = max(readings, key=lambda r: r.get_word_count())
-        print(f"\nShortest ({shortest.get_word_count()} words): {shortest.text}")
-        print(f"Longest ({longest.get_word_count()} words): {longest.text}")
-
-
-def search_readings(readings, search_term):
-    """Search readings for a specific term and display matching results."""
-    if not readings:
-        print("No readings to search.")
-        return
-
-    print(f"\n" + "=" * 60)
-    print(f"SEARCH RESULTS FOR: '{search_term}'")
-    print("=" * 60)
-
-    matching = [r for r in readings if search_term.lower() in r.text.lower()]
-
-    if matching:
-        print(f"Found {len(matching)} matching reading(s):")
-        for i, r in enumerate(matching, 1):
-            print(f"{i}. [{r.source}] {r.text}")
-    else:
-        print(f"No readings found containing '{search_term}'")
+    for r in results_by_key.values():
+        avg = r.get_average_of_results()
+        mx = r.get_maximum_of_results()
+        rng = r.get_range_of_results()
+        if avg is not None:
+            print(f"{r.detector_name} ({r.date}): avg={avg}, max={mx}, range={rng}")
+        else:
+            print(f"{r.detector_name} ({r.date}): no data")
 
 
 def main():
-    """Main function to run the file reading and analysis program."""
-    print("Lab 11: Reading Data From a File")
+    print("Lab 11: Loading Measurements from a CSV File")
     print("=" * 60)
-    print("This program reads readings from data.csv and analyzes them.")
+    print("This program reads detector results from data.csv and analyzes them.")
     print("=" * 60)
 
     filename = "data.csv"
-    readings = load_readings_from_csv(filename)
+    results_by_key = load_results_from_csv(filename)
 
-    if not readings:
-        print("Failed to load readings. Program cannot continue.")
+    if not results_by_key:
+        print("Failed to load results. Program cannot continue.")
         return
 
-    analyze_readings(readings)
-
-    print("\n" + "=" * 60)
-    print("INTERACTIVE SEARCH")
-    print("=" * 60)
-
-    while True:
-        search_term = input("\nEnter a search term (or 'quit' to exit): ").strip()
-
-        if search_term.lower() == "quit":
-            break
-        if search_term:
-            search_readings(readings, search_term)
-        else:
-            print("Please enter a search term.")
-
-    print("\n" + "=" * 60)
-    print("Program completed successfully!")
-    print("=" * 60)
+    print_summary(results_by_key)
 
 
 if __name__ == "__main__":
