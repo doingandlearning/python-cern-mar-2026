@@ -69,4 +69,15 @@ Some suggestions:
 
 The goal is to make the model a patient tutor and rubber duck, not an answer key.
 
+---
+
+### Further Training at CERN
+
+Within CERN there are intermediate and advanced follow-on courses that build on this material:
+
+- **Intermediate Python / Data Analysis**: More practice with functions, modules, testing, and working with larger real-world datasets (including NumPy and pandas patterns in more depth).
+- **Advanced Python / Software Engineering**: Topics such as packaging, type hints, performance, concurrency, and working effectively in larger codebases.
+
+If you enjoyed this course and want to deepen your skills, keep an eye on the CERN training catalogue or mailing lists for upcoming sessions, or ask your supervisor/training contact about the next runs of these courses.
+
 
