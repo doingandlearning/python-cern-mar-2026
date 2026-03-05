@@ -1,11 +1,8 @@
-text,source
-"Temperature spike detected in Sector 7 cooling system",Detector A
-"Pressure nominal in Detector A",Detector A
-"Calibration run completed for beam line B2",Beam Line B2
-"New baseline recorded for magnet array",Magnet Lab
-"Anomaly detected in particle count sensor",Detector A
-"Vacuum level within acceptable range",Beam Line B2
-"Data acquisition run finished successfully",Data Centre
-"High voltage supply stable across all channels",Detector A
-"Trigger rate above threshold in forward region",Detector A
-"Shielding survey completed no issues found",Safety Office
+detector_name,date,value
+Detector A,2026-03-03,123
+Detector A,2026-03-03,414
+Detector B,2026-03-02,12
+Detector B,2026-03-02,15
+Detector A,2026-03-04,200
+Detector C,2026-03-01,50
+

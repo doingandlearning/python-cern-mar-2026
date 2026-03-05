@@ -1,19 +1,33 @@
-# Lab 11: Reading Data From a File
+# Lab 11: Loading Measurements from a CSV File
 
 ## Objective
-So far, readings have been hard-coded in the script. Real programs usually load data from files. In this lab you’ll modify your program to read measurements or log data from a `data.csv` file using Python’s `csv` module, and build a list of `DataReading` objects from the file.
+
+So far, your result data (for `ResultValue` objects) has been created directly in code. Real programs usually load measurements from files. In this lab you’ll load detector results from a `data.csv` file using Python’s `csv` module, group them into `ResultValue` objects, and then reuse your existing analysis methods to print a summary.
 
 You will:
-1. Import `csv` and prepare an empty list for readings
+1. Import `csv` and prepare a structure to hold your `ResultValue` objects
 2. Open the CSV file, skip the header, and loop over rows
-3. Create a `DataReading` from each row (text, source) and append it to the list
-4. Use the loaded list with your existing analysis code
+3. For each (detector_name, date, value) row, update or create a `ResultValue` and call `add_result`
+4. Use the loaded objects with your existing analysis code to print a report
 
 ---
 
-## Scenario: Data in a File
+## Scenario: Detector Results in a File
 
-**Prerequisite:** Your `data.csv` can use the same readings data (text and source) as in Lab 4. The file has two columns: `text` and `source` (with a header row). Each following row is one reading. You’ll open the file, skip the header, and for each row create `DataReading(row[0], row[1])` and append it to a list. The rest of your program (analysis, printing) stays the same but works on this list instead of a hard-coded one.
+**Prerequisite:** You have an analysis class from Labs 7–8 (e.g. `ResultValue` in `results_module.py`) with methods like `add_result`, `get_average_of_results`, `get_maximum_of_results`, and `get_range_of_results` (plus any extra analysis methods you added).
+
+Now you have a `data.csv` file with **one result per row**, with columns:
+
+```csv
+detector_name,date,value
+Detector A,2026-03-03,123
+Detector A,2026-03-03,414
+Detector B,2026-03-02,12
+Detector B,2026-03-02,15
+Detector A,2026-03-04,200
+```
+
+You’ll read this file, group rows by `(detector_name, date)`, and build one `ResultValue` per group, filling `results` with the corresponding `value` numbers.
 
 ---
 
@@ -21,26 +35,26 @@ You will:
 
 **Your task:**
 
-- In `main_analysis.py` (or your main script), add `import csv` at the top
-- Remove or comment out the hard-coded list of `DataReading` objects
-- Create an empty list, e.g. `readings = []`, where you will put the loaded objects
-- Ensure `data.csv` is in the same directory as your script (or adjust the path)
+- In your analysis script (e.g. `main_analysis.py`), add `import csv` at the top
+- Import your analysis class: `from results_module import ResultValue`
+- Remove or comment out any hard-coded `ResultValue` objects you created before
+- Decide how to store the loaded objects, e.g.:
+  - a dictionary `results_by_key = {}` where the key is `(detector_name, date)` and the value is a `ResultValue` object
 
 **Hints:**
 
-- The CSV should have a header line: `text,source`
-- You’ll fill `readings` in Task 3
+- A dict keyed by `(detector_name, date)` makes it easy to group multiple measurements for the same detector and date.
 
 <details>
 <summary>Possible setup</summary>
 
 ```python
 import csv
-from reading_module import DataReading
+from results_module import ResultValue
 
 def main():
-    readings = []  # will load from file
-    # ... open file and fill readings ...
+    results_by_key = {}  # (detector_name, date) -> ResultValue
+    # ... open file and fill results_by_key ...
 ```
 
 </details>
@@ -52,53 +66,110 @@ def main():
 **Your task:**
 
 - Use `with open("data.csv", "r", newline="", encoding="utf-8") as f:`
-- Create a reader with `csv.reader(f)`
-- Call `next(reader)` once to skip the header row
-- Write a `for` loop over the reader to process each row (you’ll add the object creation in Task 3)
+- Create a reader with `csv.DictReader(f)`
+- Write a `for` loop over the reader to process each row; each row will be a dict with keys `"detector_name"`, `"date"`, and `"value"`
 
 **Hints:**
 
-- `newline=""` is recommended for `csv.reader`
-- After `next(reader)`, each `row` is a list of strings; `row[0]` is text, `row[1]` is source
+- DictReader automatically uses the header row for field names, so you can write `row["detector_name"]`, `row["date"]`, and `row["value"]`.
 
 <details>
-<summary>Possible Solution for Task 2</summary>
+<summary>Possible pattern for Task 2</summary>
 
 ```python
 with open("data.csv", "r", newline="", encoding="utf-8") as f:
-    reader = csv.reader(f)
-    next(reader)  # skip header
+    reader = csv.DictReader(f)
     for row in reader:
-        if len(row) >= 2:
-            text, source = row[0], row[1]
-            readings.append(DataReading(text, source))
+        detector_name = row.get("detector_name")
+        date_str = row.get("date")
+        value_str = row.get("value")
+        if detector_name is None or date_str is None or value_str is None:
+            continue  # skip malformed rows
+        # you'll turn value_str into a number and fill results_by_key in Task 3
 ```
 
 </details>
 
 ---
 
-## Task 3: Create DataReading Objects from Each Row
+## Task 3: Build `ResultValue` Objects from Each Row
 
 **Your task:**
 
-- Inside the loop, take `row[0]` as the reading text and `row[1]` as the source
-- Create `DataReading(text, source)` and append it to `readings`
-- Optionally check that each row has at least two columns before using it
-- After the loop, the rest of your code can use `readings` as before (e.g. print word counts, run analysis)
+- Inside the loop:
+  - Turn `value_str` into a number (e.g. `float(value_str)` or `int(value_str)`)
+  - Use `(detector_name, date_str)` as a key in `results_by_key`
+  - If the key is not in the dict yet, create a new `ResultValue(detector_name, date_str)` and store it
+  - Call `add_result(value)` on the corresponding object
+- After the loop, you should have one `ResultValue` per `(detector_name, date)` pair, each with a `results` list filled from the file
 
 **Hints:**
 
-- Handle malformed rows (e.g. `if len(row) >= 2:`) to avoid index errors
-- If the file is missing, `open(...)` will raise `FileNotFoundError`; you can add a `try...except` later if you want
+- Use `if key not in results_by_key:` to decide when to create a new object
+- Decide whether you want `int` or `float` for your values; be consistent
 
 <details>
 <summary>Possible Solution for Task 3</summary>
 
 ```python
-for row in reader:
-    if len(row) >= 2:
-        readings.append(DataReading(row[0], row[1]))
+results_by_key = {}
+
+with open("data.csv", "r", newline="", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        detector_name = row.get("detector_name")
+        date_str = row.get("date")
+        value_str = row.get("value")
+        if detector_name is None or date_str is None or value_str is None:
+            continue
+        try:
+            value = float(value_str)
+        except ValueError:
+            continue  # skip rows with non-numeric values
+
+        key = (detector_name, date_str)
+        if key not in results_by_key:
+            results_by_key[key] = ResultValue(detector_name, date_str)
+
+        results_by_key[key].add_result(value)
+```
+
+</details>
+
+---
+
+## Task 4: Print an Analysis Report from Loaded Data
+
+Now that your `ResultValue` objects are built from the file, reuse your analysis methods to print a report.
+
+**Your task:**
+
+- Loop over the `ResultValue` objects (e.g. `for r in results_by_key.values():`)
+- For each object, call methods like:
+  - `get_average_of_results()`
+  - `get_maximum_of_results()`
+  - `get_range_of_results()`
+  - and any extra analysis methods you added in Lab 7 (e.g. `count_results_above`)
+- Print a line per object, e.g.:  
+  `Detector A (2026-03-03): avg=220.0, max=414, range=291`
+
+**Hints:**
+
+- You can reuse or adapt the report loop from Lab 7
+- Consider skipping or marking detectors with no data (if your class allows empty `results`)
+
+<details>
+<summary>Possible pattern for Task 4</summary>
+
+```python
+for r in results_by_key.values():
+    avg = r.get_average_of_results()
+    mx = r.get_maximum_of_results()
+    rng = r.get_range_of_results()
+    if avg is not None:
+        print(f"{r.detector_name} ({r.date}): avg={avg}, max={mx}, range={rng}")
+    else:
+        print(f"{r.detector_name} ({r.date}): no data")
 ```
 
 </details>
@@ -108,32 +179,41 @@ for row in reader:
 ## Example `data.csv` Format
 
 ```csv
-text,source
-"Temperature spike detected in Sector 7 cooling system",Detector A
-"Pressure nominal in Detector A",Detector A
+detector_name,date,value
+Detector A,2026-03-03,123
+Detector A,2026-03-03,414
+Detector B,2026-03-02,12
+Detector B,2026-03-02,15
+Detector A,2026-03-04,200
+Detector C,2026-03-01,50
 ```
+
+Put `data.csv` in the same directory as your script (or adjust the path in `open(...)`).
 
 ---
 
-**You're done when** the program loads readings from `data.csv` into a list of `DataReading` objects and your existing analysis runs on the loaded list.
+**You're done when** the program loads measurements from `data.csv` into a mapping of `(detector_name, date) -> ResultValue` objects and your existing analysis prints a report based on the file data instead of hard-coded values.
 
 ---
 
 ## Key Concepts Demonstrated
 
 - **File I/O**: `open()` with `with` so the file is closed automatically
-- **CSV**: `csv.reader()` to parse rows; first row is often the header
-- **Separation of data and code**: Change the data by editing the file, not the program
+- **CSV**: `csv.reader()` to parse rows; first row is the header
+- **Grouping**: Using a dict keyed by `(detector_name, date)` to group related measurements
+- **Separation of data and code**: Change the data by editing `data.csv`, not the program
 
 ---
 
 ## Common Issues
 
 - **FileNotFoundError** — Run the script from the directory that contains `data.csv`, or use the full path to the file.
-- **Wrong columns** — Ensure the CSV has a header and that you use `row[0]` and `row[1]` in the right order (text, source).
+- **Wrong columns** — Ensure the CSV has a header `detector_name,date,value` and that you use `row[0]`, `row[1]`, `row[2]` in the right order.
+- **ValueError when converting to float** — If `value_str` is not numeric, `float(value_str)` will raise `ValueError`; decide whether to skip that row or handle it differently.
 
 ---
 
 ## Next Steps
 
-In the final case study, you’ll tie together file loading, the `DataReading` class, analysis by source, and writing a report to a file.
+In the final case study or in a Pandas/matplotlib session, you can load the same `data.csv` into a DataFrame, compute statistics, and compare them with what your `ResultValue` class computes.
+
